@@ -6,6 +6,9 @@ from lsm.storage import ModelIOError, load_model, save_model
 
 
 def configure(commands):
+    from lsm.adoption_cli import configure as configure_adoption
+
+    configure_adoption(commands)
     migration = commands.add_parser("migrate", help="explicitly upgrade a model schema")
     migration.add_argument("source", type=Path)
     migration.add_argument("destination", type=Path)
@@ -122,6 +125,11 @@ def write_projection(files, destination, force=False):
 
 
 def dispatch(args):
+    from lsm.adoption_cli import dispatch as dispatch_adoption
+
+    adoption_result = dispatch_adoption(args)
+    if adoption_result is not None:
+        return adoption_result
     if args.command == "context-compare":
         import json
 
