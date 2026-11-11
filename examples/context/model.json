@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "model": {"id": "model.context-demo", "title": "Illustrative bounded context"},
+  "nodes": [
+    {
+      "id": "requirement.save", "type": "requirement", "title": "Save a note", "version": 1,
+      "acceptance_criteria": ["The same user can retrieve their saved note."],
+      "approval": "pending", "open_questions": ["Should saving work offline?"],
+      "provenance": {"origin": "declared", "source": "examples/context/model.json", "verification": "unverified"}
+    },
+    {
+      "id": "component.notes", "type": "component", "title": "Proposed notes component", "version": 1,
+      "description": "Illustrative mapping only; no application has been inspected or executed.",
+      "provenance": {"origin": "inferred", "source": "examples/context/model.json", "verification": "unverified"}
+    },
+    {
+      "id": "evidence.scenario", "type": "evidence", "title": "Proposed scenario", "version": 1,
+      "uri": "examples/context/README.md",
+      "provenance": {"origin": "declared", "source": "examples/context/model.json", "verification": "unverified"}
+    },
+    {
+      "id": "component.unrelated", "type": "component", "title": "Disconnected billing component", "version": 1,
+      "provenance": {"origin": "declared", "source": "examples/context/model.json", "verification": "unverified"}
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge.satisfies", "type": "satisfies", "source": "component.notes", "target": "requirement.save",
+      "provenance": {"origin": "inferred", "source": "examples/context/model.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.scenario", "type": "verified_by", "source": "requirement.save", "target": "evidence.scenario",
+      "provenance": {"origin": "declared", "source": "examples/context/model.json", "verification": "unverified"}
+    }
+  ]
+}

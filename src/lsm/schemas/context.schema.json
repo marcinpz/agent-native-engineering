@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lsm:schema:context:1.0",
+  "title": "Bounded task context 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "model_id", "task", "trust", "seed_ids", "nodes", "edges", "citations", "selection", "uncertainties", "omitted", "accounting"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "model_id": {"type": "string", "minLength": 1},
+    "task": {"type": "string", "minLength": 1},
+    "trust": {"const": "untrusted_data_no_implicit_approval"},
+    "seed_ids": {"$ref": "#/$defs/ids"},
+    "nodes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}},
+    "citations": {"type": "array", "items": {"$ref": "#/$defs/citation"}},
+    "selection": {"type": "array", "items": {"$ref": "#/$defs/selection"}},
+    "uncertainties": {"type": "array", "items": {"$ref": "#/$defs/uncertainty"}},
+    "omitted": {
+      "type": "object", "additionalProperties": false,
+      "required": ["nodes", "edges", "truncated_values"],
+      "properties": {
+        "nodes": {"$ref": "#/$defs/count"}, "edges": {"$ref": "#/$defs/count"},
+        "truncated_values": {"$ref": "#/$defs/count"}
+      }
+    },
+    "accounting": {
+      "type": "object", "additionalProperties": false,
+      "required": ["method", "budget", "estimated_tokens", "provider_overhead_included", "naive_whole_model_estimated_tokens"],
+      "properties": {
+        "method": {"const": "canonical_json_utf8_bytes"},
+        "budget": {"type": "integer", "minimum": 1},
+        "estimated_tokens": {"$ref": "#/$defs/count"},
+        "provider_overhead_included": {"const": false},
+        "naive_whole_model_estimated_tokens": {"$ref": "#/$defs/count"}
+      }
+    }
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "id": {"type": "string", "minLength": 1},
+    "ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "text": {"type": "string", "maxLength": 257},
+    "texts": {"type": "array", "maxItems": 8, "items": {"$ref": "#/$defs/text"}},
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["origin", "verification"],
+      "properties": {
+        "origin": {"enum": ["declared", "inferred", "observed"]},
+        "verification": {"enum": ["verified", "unverified"]},
+        "rationale": {"$ref": "#/$defs/text"}
+      }
+    },
+    "node": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "title", "version", "provenance"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "type": {"enum": ["requirement", "domain_concept", "behavior", "component", "interface", "repository", "decision", "implementation", "test", "evidence"]},
+        "title": {"type": "string", "maxLength": 161},
+        "version": {"type": "integer", "minimum": 1},
+        "evidence": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "description": {"type": "string", "maxLength": 513},
+        "owner": {"$ref": "#/$defs/text"},
+        "approval": {"enum": ["pending", "approved", "rejected"]},
+        "commit": {"$ref": "#/$defs/text"},
+        "timestamp": {"$ref": "#/$defs/text"},
+        "acceptance_criteria": {"$ref": "#/$defs/texts"},
+        "open_questions": {"$ref": "#/$defs/texts"},
+        "constraints": {"$ref": "#/$defs/texts"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "edge": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "type", "source", "target", "provenance"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "type": {"enum": ["satisfies", "depends_on", "implemented_by", "verified_by", "supersedes", "exposes", "decided_by", "belongs_to"]},
+        "source": {"$ref": "#/$defs/id"}, "target": {"$ref": "#/$defs/id"},
+        "evidence": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "provenance": {"$ref": "#/$defs/provenance"}
+      }
+    },
+    "citation": {
+      "type": "object", "additionalProperties": false, "required": ["id", "source"],
+      "properties": {"id": {"$ref": "#/$defs/id"}, "source": {"$ref": "#/$defs/text"}, "uri": {"$ref": "#/$defs/text"}}
+    },
+    "selection": {
+      "type": "object", "additionalProperties": false, "required": ["id", "reason", "path", "via"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "reason": {"enum": ["explicit_seed", "graph_neighbor"]},
+        "path": {"$ref": "#/$defs/ids"}, "via": {"type": "string"}
+      }
+    },
+    "uncertainty": {
+      "type": "object", "additionalProperties": false, "required": ["id", "flags", "omitted_evidence"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "flags": {"type": "array", "uniqueItems": true, "items": {"enum": ["inferred", "unverified", "open_questions", "omitted_evidence"]}},
+        "omitted_evidence": {"$ref": "#/$defs/count"}
+      }
+    }
+  }
+}
