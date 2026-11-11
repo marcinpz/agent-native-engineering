@@ -26,7 +26,7 @@ uv run lsm init my-system.json --id system:demo --title "Demo system"
 uv run lsm validate my-system.json --json
 uv run lsm validate examples/shop.json
 uv run lsm inspect examples/shop.json
-uv run lsm inspect examples/shop.json --node component:backend --json
+uv run lsm inspect examples/shop.json --node component.backend --json
 uv run lsm import examples/shop.json my-system.yaml
 uv run lsm show my-system.yaml --json
 ```
