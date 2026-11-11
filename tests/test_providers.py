@@ -397,3 +397,32 @@ def test_git_environment_injection_ignored(manifest, tmp_path, monkeypatch):
     monkeypatch.setenv("GIT_CONFIG_KEY_0", "core.bare")
     monkeypatch.setenv("GIT_CONFIG_VALUE_0", "true")
     assert collect(manifest, tmp_path)["status"] == "succeeded"
+
+
+@pytest.mark.parametrize(
+    ("index", "field", "replacement"),
+    [
+        (0, "source_ref", "f" * 40),
+        (0, "source_ref", None),
+        (0, "source_ref", "backend@" + "f" * 40),
+        (1, "source_ref", "f" * 40),
+        (0, "id", "random-evidence-id"),
+        (1, "id", "random-evidence-id"),
+    ],
+)
+def test_evidence_identity_and_ref_mismatch_rejected(manifest, tmp_path, index, field, replacement):
+    def alter(result):
+        result["evidence"][index][field] = replacement
+
+    provider = AlteredProvider(alter)
+    response = provider.discover(manifest=manifest, base_dir=tmp_path)
+    assert response["status"] == "succeeded"
+    assert any(
+        error["code"] == "invalid_evidence" and error["path"] == f"/evidence/{index}/{field}"
+        for error in validate_result(response)
+    )
+    result = collect(manifest, tmp_path, provider)
+    assert result["status"] == "failed"
+    assert result["data"] is None
+    assert result["errors"][0]["code"] == "invalid_response"
+    assert validate_result(result) == []

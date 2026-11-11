@@ -37,6 +37,14 @@ def _now():
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
+def _evidence_identity(identifier, source):
+    # Discovery already supplies immutable Git refs; do not inspect Git here.
+    return {
+        "id": "provider-evidence:" + _digest({"id": identifier, "source": source}),
+        "source_ref": source.split("; git:", 1)[1] if "; git:" in source else None,
+    }
+
+
 def _result(descriptor, capability, digest, model=None, error=None):
     timestamp = _now()
     evidence = []
@@ -44,14 +52,11 @@ def _result(descriptor, capability, digest, model=None, error=None):
         for entity in model["nodes"] + model["edges"]:
             provenance = entity["provenance"]
             source = provenance["source"]
-            # Discovery already supplies immutable git refs; do not inspect Git here.
-            source_ref = source.split("; git:", 1)[1] if "; git:" in source else None
             evidence.append(
                 {
-                    "id": "provider-evidence:" + _digest({"id": entity["id"], "source": source}),
+                    **_evidence_identity(entity["id"], source),
                     "entity_id": entity["id"],
                     "source_uri": source,
-                    "source_ref": source_ref,
                     "origin": provenance["origin"],
                     "verification": "unverified",
                     "confidence": None,
@@ -122,6 +127,17 @@ def validate_result(result) -> list[dict]:
                 errors.append(
                     _diagnostic(
                         "invalid_evidence", "/evidence", "Evidence must cover model entities"
+                    )
+                )
+    for index, item in enumerate(result["evidence"]):
+        expected = _evidence_identity(item["entity_id"], item["source_uri"])
+        for field, value in expected.items():
+            if item[field] != value:
+                errors.append(
+                    _diagnostic(
+                        "invalid_evidence",
+                        f"/evidence/{index}/{field}",
+                        "Evidence identity and immutable ref must match its source",
                     )
                 )
     identifiers = [item["id"] for item in result["evidence"]]
