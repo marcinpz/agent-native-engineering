@@ -112,10 +112,13 @@ def main(argv=None):
                     print(f"  {kind}: {count}")
         return 0
     except ModelIOError as exc:
+        from lsm.security import redact
+
+        message = redact(str(exc))
         if getattr(args, "json_output", False):
-            _emit_errors([{"code": "io_error", "path": "", "message": str(exc)}], True)
+            _emit_errors([{"code": "io_error", "path": "", "message": message}], True)
         else:
-            print(f"I/O error: {exc}", file=sys.stderr)
+            print(f"I/O error: {message}", file=sys.stderr)
         return 2
     except ValueError as exc:
         from lsm.security import redact
