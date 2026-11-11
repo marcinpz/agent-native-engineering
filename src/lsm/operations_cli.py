@@ -21,6 +21,24 @@ def configure(commands):
     discovery.add_argument("--base-dir", type=Path, required=True)
     discovery.add_argument("--existing", type=Path)
     discovery.add_argument("--force", action="store_true")
+    requirements = commands.add_parser("requirement", help="refine and transition requirements")
+    lifecycle = requirements.add_subparsers(dest="requirement_command", required=True)
+    create = lifecycle.add_parser("create")
+    create.add_argument("requirement_id")
+    create.add_argument("destination", type=Path)
+    create.add_argument("--intent", required=True)
+    create.add_argument("--force", action="store_true")
+    for name in ("refine", "transition", "validate"):
+        operation = lifecycle.add_parser(name)
+        operation.add_argument("source", type=Path)
+        if name != "validate":
+            operation.add_argument("destination", type=Path)
+            operation.add_argument("--force", action="store_true")
+        if name == "transition":
+            operation.add_argument("--state", required=True)
+            operation.add_argument("--policy", type=Path)
+            operation.add_argument("--actor")
+            operation.add_argument("--actor-kind", choices=["human", "agent"], default="human")
 
 
 def write_document(document, destination, force=False):
@@ -48,6 +66,39 @@ def write_projection(files, destination, force=False):
 
 
 def dispatch(args):
+    if args.command == "requirement":
+        from lsm.requirements import (
+            create_requirement,
+            refine_requirement,
+            transition_requirement,
+            validate_requirement,
+        )
+
+        if args.requirement_command == "create":
+            record = create_requirement(args.requirement_id, args.intent)
+        else:
+            record = load_model(args.source)
+            if args.requirement_command == "validate":
+                import json
+
+                from lsm.security import redact
+
+                errors = validate_requirement(record)
+                print(json.dumps(redact({"valid": not errors, "errors": errors}), sort_keys=True))
+                return int(bool(errors))
+            if args.requirement_command == "refine":
+                record = refine_requirement(record)
+            else:
+                record = transition_requirement(
+                    record,
+                    args.state,
+                    load_model(args.policy) if args.policy else None,
+                    args.actor,
+                    args.actor_kind,
+                )
+        write_document(record, args.destination, args.force)
+        print(f"Saved {args.destination}")
+        return 0
     if args.command == "migrate":
         from lsm.migrations import migrate_model
 

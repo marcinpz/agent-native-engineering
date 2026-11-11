@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "requirement_id": "requirement.offline-sync",
+  "version": 2,
+  "intent": "Allow mobile users to work offline and sync later.",
+  "state": "questions",
+  "questions": [
+    "Which user-visible outcomes and measurable acceptance criteria define success?",
+    "Who owns offline data and is authorized to create, change, or delete it?",
+    "How are concurrent offline and server changes detected and conflicts resolved?",
+    "What works without connectivity, and when and how is synchronization retried?",
+    "What consistency guarantees apply during disconnection and after reconnection?"
+  ],
+  "assumptions": [],
+  "acceptance_criteria": [],
+  "history": [{
+    "from_state": "draft", "to_state": "questions",
+    "from_version": 1, "to_version": 2,
+    "actor": "rule-based-refiner", "actor_kind": "agent",
+    "prior_snapshot": {
+      "schema_version": "1.0", "requirement_id": "requirement.offline-sync",
+      "version": 1, "intent": "Allow mobile users to work offline and sync later.",
+      "state": "draft", "questions": [], "assumptions": [], "acceptance_criteria": []
+    }
+  }]
+}

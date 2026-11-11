@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "requirement_id": "requirement.offline-sync",
+  "version": 2,
+  "intent": "Allow mobile users to work offline and sync later.",
+  "state": "proposed",
+  "questions": [],
+  "assumptions": [
+    "Illustrative human-authored proposal, not approved behavior.",
+    "A single authenticated owner controls each record; server revisions are authoritative."
+  ],
+  "acceptance_criteria": [
+    "An owner can read cached records and queue edits without connectivity; queued edits survive restart.",
+    "On reconnection, retry queued edits without duplicate application and reject edits by another owner.",
+    "Detect concurrent revisions and retain both edits for explicit owner conflict resolution; never silently overwrite.",
+    "After successful conflict-free synchronization, mobile and server expose the same revision."
+  ],
+  "history": [{
+    "from_state": "draft", "to_state": "proposed",
+    "from_version": 1, "to_version": 2,
+    "actor": "example-author", "actor_kind": "human",
+    "prior_snapshot": {
+      "schema_version": "1.0", "requirement_id": "requirement.offline-sync",
+      "version": 1, "intent": "Allow mobile users to work offline and sync later.",
+      "state": "draft", "questions": [],
+      "assumptions": [
+        "Illustrative human-authored proposal, not approved behavior.",
+        "A single authenticated owner controls each record; server revisions are authoritative."
+      ],
+      "acceptance_criteria": [
+        "An owner can read cached records and queue edits without connectivity; queued edits survive restart.",
+        "On reconnection, retry queued edits without duplicate application and reject edits by another owner.",
+        "Detect concurrent revisions and retain both edits for explicit owner conflict resolution; never silently overwrite.",
+        "After successful conflict-free synchronization, mobile and server expose the same revision."
+      ]
+    }
+  }]
+}
