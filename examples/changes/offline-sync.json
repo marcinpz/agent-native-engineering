@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0", "model": {"id": "system.offline-demo", "title": "Offline sync demo"},
   "nodes": [
-    {"id":"requirement.offline-sync","type":"requirement","title":"Sync notes after offline edits","version":2,"acceptance_criteria":["Offline edits survive restart.","Reconnect retries do not duplicate edits.","Conflicts remain visible for user resolution."],"approval":"pending","open_questions":["What is the supported offline retention window?"],"provenance":{"origin":"declared","source":"examples/changes/offline-sync.json","verification":"unverified"}},
+    {"id":"requirement.offline-sync","type":"requirement","title":"Generated synchronize contract v2","version":2,"acceptance_criteria":["In each generated Python fixture, synchronize(queued) returns exactly {'version': 2, 'accepted': len(queued), 'offline': True} for a sized queue.","This pure function demo performs no persistence, networking, retries or conflict resolution and makes no application fulfillment claim."],"approval":"pending","provenance":{"origin":"declared","source":"examples/changes/offline-sync.json","verification":"unverified"}},
     {"id":"component.backend","type":"component","title":"Backend API","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
     {"id":"component.web","type":"component","title":"Web client","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
     {"id":"component.mobile","type":"component","title":"Mobile client","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
     {"id":"component.store","type":"component","title":"Data store","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
-    {"id":"test.offline-sync","type":"test","title":"Cross-client sync acceptance","version":1,"description":"Proposed test, not an execution record.","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"test.offline-sync","type":"test","title":"Generated synchronize(['pending']) contract","version":1,"description":"Planned fixed fixture assertion, not an execution record.","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
     {"id":"repo.backend","type":"repository","title":"Backend","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
     {"id":"repo.web","type":"repository","title":"Web","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
     {"id":"repo.mobile","type":"repository","title":"Mobile","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},

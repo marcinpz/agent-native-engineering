@@ -1,0 +1,7 @@
+{
+  "version": "1.0",
+  "humans": ["owner"],
+  "permissions": {
+    "approve_changes": ["owner"]
+  }
+}
