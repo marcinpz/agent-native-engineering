@@ -1,0 +1,144 @@
+[
+  {
+    "run": "cancel-baseline",
+    "checks": {
+      "public": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "heldout": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "original_inputs_unchanged": true,
+    "file_sha256": {
+      ".gitignore": "a51104264729e7b362ea8c739de0ada29ba6e4f6047580ec3a3fd330ad20fd47",
+      "README.md": "633c3f51752741a8cc7929b1e0d81bd0c23a87b6266759f6e9f31086b84509f2",
+      "TASK.md": "93c997c8c5cb2cdc1d8293dbd2fde460b37f60b26bab70ad3cbe41fe3987be49",
+      "api.py": "494adce1e23289ec0e9909741c6b252d9732fde3b4bfd97e86cbddc7e32a74b1",
+      "client.py": "e78c4dccbccbe4661b717f3863f7b08a641fdf939107b7572bf42059ea78622c",
+      "domain.py": "f8fdd7e30356af0f7ab8dd131901052cf2b9fdde0cb771198b9d97f1c2edc541",
+      "store.py": "721d56791bc82323053d4f0f4c1882794aaa5084c6dce8c5a0e4ffbecac17415",
+      "test_cancel.py": "3579db67f32ba3a2785dd98173a100702071480f6e36be5da0c088b0495da17c",
+      "test_public.py": "d1e4f101a0b3fda3a78347ff0ca20781685b81fdf5a6d680f1f249b7a9ca88ba"
+    },
+    "added_files": [
+      "test_cancel.py"
+    ],
+    "cumulative_input_exposure": 29731,
+    "output": 1380,
+    "actual_cost_usd": null
+  },
+  {
+    "run": "cancel-ane",
+    "checks": {
+      "public": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "heldout": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "original_inputs_unchanged": true,
+    "file_sha256": {
+      ".gitignore": "a51104264729e7b362ea8c739de0ada29ba6e4f6047580ec3a3fd330ad20fd47",
+      "CONTEXT.json": "1b5ad452d816c572178737a19a4e6fa152c3f9a089e15e2f4aa62bae5ae1d1f1",
+      "README.md": "633c3f51752741a8cc7929b1e0d81bd0c23a87b6266759f6e9f31086b84509f2",
+      "TASK.md": "93c997c8c5cb2cdc1d8293dbd2fde460b37f60b26bab70ad3cbe41fe3987be49",
+      "api.py": "683488dcd009d9ac73135a47e5a2ed46538f650e3d7cfc94eafab658300ec813",
+      "client.py": "e78c4dccbccbe4661b717f3863f7b08a641fdf939107b7572bf42059ea78622c",
+      "domain.py": "f8fdd7e30356af0f7ab8dd131901052cf2b9fdde0cb771198b9d97f1c2edc541",
+      "store.py": "72880221cba416120c8f3ba2fdbbf86139561c8b884bbeeb93a07f527924db01",
+      "test_cancel.py": "04eef541617cadc4a5b1f2a6d525735a58027dd82814c75771c5869ef239e317",
+      "test_public.py": "d1e4f101a0b3fda3a78347ff0ca20781685b81fdf5a6d680f1f249b7a9ca88ba"
+    },
+    "added_files": [
+      "test_cancel.py"
+    ],
+    "cumulative_input_exposure": 33736,
+    "output": 1414,
+    "actual_cost_usd": null
+  },
+  {
+    "run": "pagination-baseline",
+    "checks": {
+      "public": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "heldout": {
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "original_inputs_unchanged": true,
+    "file_sha256": {
+      ".gitignore": "a51104264729e7b362ea8c739de0ada29ba6e4f6047580ec3a3fd330ad20fd47",
+      "README.md": "f3d3d84466c4f871e8743e59c787d9da02afd051f677a17a4b3be414ddfadd28",
+      "TASK.md": "b48f02a4e6dd2cf387204dbf9f60e01e91cb6d26fc0177bb48c98338c41eed02",
+      "api.py": "c5306d8f983a52698332d4687b7b03985d1361c628f3b48859ef74ed7d994814",
+      "client.py": "4bdc98aa6ce1284b17c3f2468f97f3df36cb712a55dd459bd1064272500c9cde",
+      "domain.py": "b1c431f95716004eb955cc33a2f1d841a2b2399cf9157a3dab1f14bbc5dc2c38",
+      "store.py": "e810e4c68f15e22013edbab7f80ee67888968344fece4f6a89fd3fd58abfb040",
+      "test_pagination.py": "ee38789bd10dbaa5522af8b6a00c8a9c2eb85f79afb4c736fc2eaa952eadf39f",
+      "test_public.py": "014797a83058ee4049693597032bc17df94ce9ead9dd5ea32dda9b27bfc2c64d"
+    },
+    "added_files": [
+      "test_pagination.py"
+    ],
+    "cumulative_input_exposure": 31731,
+    "output": 1679,
+    "actual_cost_usd": null
+  },
+  {
+    "run": "pagination-ane",
+    "checks": {
+      "public": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "heldout": {
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "original_inputs_unchanged": true,
+    "file_sha256": {
+      ".gitignore": "a51104264729e7b362ea8c739de0ada29ba6e4f6047580ec3a3fd330ad20fd47",
+      "CONTEXT.json": "3f1ebe9e14bf07343d5998d489028d81141b2a140e13e3157e1030b37bee40d6",
+      "README.md": "f3d3d84466c4f871e8743e59c787d9da02afd051f677a17a4b3be414ddfadd28",
+      "TASK.md": "b48f02a4e6dd2cf387204dbf9f60e01e91cb6d26fc0177bb48c98338c41eed02",
+      "api.py": "fbbf6c5f881ac313c7131efa5be8c9e58b89ed053894fe838506de97b9e12eb6",
+      "client.py": "4bdc98aa6ce1284b17c3f2468f97f3df36cb712a55dd459bd1064272500c9cde",
+      "domain.py": "b1c431f95716004eb955cc33a2f1d841a2b2399cf9157a3dab1f14bbc5dc2c38",
+      "store.py": "e810e4c68f15e22013edbab7f80ee67888968344fece4f6a89fd3fd58abfb040",
+      "test_pagination.py": "a9cd6444dbefe67452c8a42463927f6be055848ce124c6ea1bb0cd227800d104",
+      "test_public.py": "014797a83058ee4049693597032bc17df94ce9ead9dd5ea32dda9b27bfc2c64d"
+    },
+    "added_files": [
+      "test_pagination.py"
+    ],
+    "cumulative_input_exposure": 34422,
+    "output": 1510,
+    "actual_cost_usd": null
+  }
+]

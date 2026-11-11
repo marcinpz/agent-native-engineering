@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/tmp/opencode/ane-agent-pilot/.venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "/tmp/opencode/ane-pilot-evaluator/accept_cancel.py",
+    "--junitxml=/tmp/opencode/ane-pilot-evaluator/results/cancel-ane/heldout/junit.xml"
+  ],
+  "cwd": "/tmp/opencode/ane-pilot-runs/cancel-ane",
+  "returncode": 0,
+  "stdout": "..........                                                               [100%]\n- generated xml file: /tmp/opencode/ane-pilot-evaluator/results/cancel-ane/heldout/junit.xml -\n10 passed in 0.08s\n",
+  "stderr": ""
+}

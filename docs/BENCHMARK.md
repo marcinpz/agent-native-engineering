@@ -2,7 +2,14 @@
 
 ## Status and scope (#8)
 
-**Empirical agent results pending.** Owner approval covers this offline harness,
+**Limited local agent pilot available; broader empirical gates remain pending.**
+The [actual n=2 matched pilot](../examples/experiments/agent-pilot/REPORT.md)
+records four first-attempt passes, equal acceptance and increased cumulative
+input exposure with ANE; unknown USD, concurrent timing and unspecified effective
+budgets preclude cost/speed claims. It is not the 30-pair gate or remote
+multi-repository acceptance. Historical preparation scope follows.
+
+Owner approval covers this offline harness,
 methodology and local preparation smoke only. Paid agent experiments require an
 explicit user-approved provider/model, monetary ceiling, token budget and run
 count. No agent is invoked by these APIs. Synthetic tests are not actual results.
@@ -156,5 +163,7 @@ estimates. Never interpret null as zero.
    Keep restricted originals separately; never publish credentials or environment
    files. Document withheld artifacts and limitations to reproducibility.
 
-No paid run, agent task success, quality improvement, cost reduction or completion
-of the roadmap's empirical research phase is claimed by this harness.
+The harness APIs alone do not establish paid usage, agent task success, quality
+improvement, cost reduction or completion of the roadmap's empirical research
+phase. The separately archived local pilot above records actual task outcomes,
+but does not establish broader gains or close that phase.

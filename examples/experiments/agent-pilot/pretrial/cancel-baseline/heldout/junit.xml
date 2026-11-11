@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="10" time="0.098" timestamp="2026-11-11T19:38:39.320290+01:00" hostname="marcin-UX410UAK"><testcase classname="ane-pilot-evaluator.accept_cancel" name="test_refund_replay_and_cross_instance" time="0.000"><failure message="AttributeError: 'Client' object has no attribute 'cancel'">def test_refund_replay_and_cross_instance():
+        store, api = setup()
+        expected = {"id": "a", "state": "cancelled", "refunded": 125}
+&gt;       assert Client(api, "u").cancel("a", "k") == expected
+               ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Client' object has no attribute 'cancel'
+
+../../ane-pilot-evaluator/accept_cancel.py:25: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_cancel" name="test_failure_does_not_reserve[missing-404]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'cancel'">order = 'missing', status = 404
+
+    @pytest.mark.parametrize("order,status", [("missing", 404), ("v", 404), ("s", 409)])
+    def test_failure_does_not_reserve(order, status):
+        store, api = setup()
+&gt;       assert api.cancel("u", order, "retry")[0] == status
+               ^^^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'cancel'
+
+../../ane-pilot-evaluator/accept_cancel.py:39: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_cancel" name="test_failure_does_not_reserve[v-404]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'cancel'">order = 'v', status = 404
+
+    @pytest.mark.parametrize("order,status", [("missing", 404), ("v", 404), ("s", 409)])
+    def test_failure_does_not_reserve(order, status):
+        store, api = setup()
+&gt;       assert api.cancel("u", order, "retry")[0] == status
+               ^^^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'cancel'
+
+../../ane-pilot-evaluator/accept_cancel.py:39: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_cancel" name="test_failure_does_not_reserve[s-409]" time="0.000"><failure message="AttributeError: 'API' object has no attribute 'cancel'">order = 's', status = 409
+
+    @pytest.mark.parametrize("order,status", [("missing", 404), ("v", 404), ("s", 409)])
+    def test_failure_does_not_reserve(order, status):
+        store, api = setup()
+&gt;       assert api.cancel("u", order, "retry")[0] == status
+               ^^^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'cancel'
+
+../../ane-pilot-evaluator/accept_cancel.py:39: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_cancel" name="test_invalid_keys[]" time="0.000"><failure message="AttributeError: 'API' object has no attribute 'cancel'">key = ''
+
+    @pytest.mark.parametrize("key", ["", None, 1, False, []])
+    def test_invalid_keys(key):
+        store, api = setup()
+&gt;       assert api.cancel("u", "a", key)[0] == 400
+               ^^^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'cancel'
+
+../../ane-pilot-evaluator/accept_cancel.py:48: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_cancel" name="test_invalid_keys[None]" time="0.000"><failure message="AttributeError: 'API' object has no attribute 'cancel'">key = None
+
+    @pytest.mark.parametrize("key", ["", None, 1, False, []])
+    def test_invalid_keys(key):
+        store, api = setup()
+&gt;       assert api.cancel("u", "a", key)[0] == 400
+               ^^^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'cancel'
+
+../../ane-pilot-evaluator/accept_cancel.py:48: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_cancel" name="test_invalid_keys[1]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'cancel'">key = 1
+
+    @pytest.mark.parametrize("key", ["", None, 1, False, []])
+    def test_invalid_keys(key):
+        store, api = setup()
+&gt;       assert api.cancel("u", "a", key)[0] == 400
+               ^^^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'cancel'
+
+../../ane-pilot-evaluator/accept_cancel.py:48: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_cancel" name="test_invalid_keys[False]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'cancel'">key = False
+
+    @pytest.mark.parametrize("key", ["", None, 1, False, []])
+    def test_invalid_keys(key):
+        store, api = setup()
+&gt;       assert api.cancel("u", "a", key)[0] == 400
+               ^^^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'cancel'
+
+../../ane-pilot-evaluator/accept_cancel.py:48: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_cancel" name="test_invalid_keys[key4]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'cancel'">key = []
+
+    @pytest.mark.parametrize("key", ["", None, 1, False, []])
+    def test_invalid_keys(key):
+        store, api = setup()
+&gt;       assert api.cancel("u", "a", key)[0] == 400
+               ^^^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'cancel'
+
+../../ane-pilot-evaluator/accept_cancel.py:48: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_cancel" name="test_client_error" time="0.001"><failure message="AttributeError: 'Client' object has no attribute 'cancel'">def test_client_error():
+        _, api = setup()
+        with pytest.raises(ValueError) as exc:
+&gt;           Client(api, "u").cancel("s", "k")
+            ^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Client' object has no attribute 'cancel'
+
+../../ane-pilot-evaluator/accept_cancel.py:56: AttributeError</failure></testcase></testsuite></testsuites>
