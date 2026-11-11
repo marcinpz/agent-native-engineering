@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-native-engineering.org/schemas/requirement/1.0",
+  "title": "Standalone requirement lifecycle 1.0",
+  "type": "object",
+  "allOf": [{"$ref": "#/$defs/content"}],
+  "required": ["history"],
+  "properties": {"history": {"type": "array", "items": {"$ref": "#/$defs/historyEntry"}}},
+  "unevaluatedProperties": false,
+  "$defs": {
+    "text": {"type": "string", "pattern": "\\S"},
+    "state": {"enum": ["draft", "questions", "proposed", "approved", "superseded"]},
+    "content": {
+      "type": "object",
+      "required": ["schema_version", "requirement_id", "version", "intent", "state", "questions", "assumptions", "acceptance_criteria"],
+      "properties": {
+        "schema_version": {"const": "1.0"},
+        "requirement_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+        "version": {"type": "integer", "minimum": 1},
+        "intent": {"$ref": "#/$defs/text"},
+        "state": {"$ref": "#/$defs/state"},
+        "questions": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+        "assumptions": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+        "acceptance_criteria": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}}
+      }
+    },
+    "historyEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from_state", "to_state", "from_version", "to_version", "actor", "actor_kind", "prior_snapshot"],
+      "properties": {
+        "from_state": {"$ref": "#/$defs/state"},
+        "to_state": {"$ref": "#/$defs/state"},
+        "from_version": {"type": "integer", "minimum": 1},
+        "to_version": {"type": "integer", "minimum": 2},
+        "actor": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+        "actor_kind": {"enum": ["human", "agent"]},
+        "prior_snapshot": {"$ref": "#/$defs/content", "unevaluatedProperties": false}
+      }
+    }
+  }
+}

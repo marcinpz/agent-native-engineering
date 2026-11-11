@@ -94,3 +94,42 @@ def test_discover_cli_and_idempotent_import(tmp_path):
     from lsm.storage import load_model
 
     assert load_model(destination) == load_model(second)
+
+
+def test_requirement_cli_asks_without_approving(tmp_path):
+    draft, questions = tmp_path / "draft.json", tmp_path / "questions.json"
+    assert (
+        main(
+            [
+                "requirement",
+                "create",
+                "requirement:offline",
+                str(draft),
+                "--intent",
+                "Support offline sync",
+            ]
+        )
+        == 0
+    )
+    assert main(["requirement", "refine", str(draft), str(questions)]) == 0
+    record = json.loads(questions.read_text())
+    assert record["state"] == "questions"
+    assert len(record["questions"]) >= 3
+    assert main(["requirement", "validate", str(questions)]) == 0
+    assert (
+        main(
+            [
+                "requirement",
+                "transition",
+                str(questions),
+                str(tmp_path / "approved.json"),
+                "--state",
+                "approved",
+                "--actor",
+                "agent",
+                "--actor-kind",
+                "agent",
+            ]
+        )
+        == 1
+    )
