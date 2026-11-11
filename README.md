@@ -91,6 +91,8 @@ CI also smoke-tests the installed wheel outside the checkout. See
 - [Getting started](docs/GETTING_STARTED.md): installation and complete CLI demo.
 - [Integration gate](docs/verification/INTEGRATION_GATE.md): joined-flow coverage,
   actual verification results and explicit limitations.
+- [Ecosystem assessment](docs/research/ECOSYSTEM_ASSESSMENT.md): initial primary-source
+  research, proposed integration stacks and open acceptance gates; not adopted architecture.
 - [Model](docs/MODEL.md), [governance](docs/GOVERNANCE.md),
   [discovery](docs/DISCOVERY.md), [documentation](docs/DOCUMENTATION.md).
 - [Requirements](docs/REQUIREMENTS.md), [changes](docs/CHANGES.md),

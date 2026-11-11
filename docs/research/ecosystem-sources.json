@@ -1,0 +1,303 @@
+{
+  "artifact_version": "research-0.1",
+  "issue": "https://github.com/marcinpz/agent-native-engineering/issues/21",
+  "checked_on": "2026-11-11",
+  "status": "initial-milestone",
+  "claim_policy": {
+    "observed_documentation": "A primary document/API response was read; not a runtime capability test.",
+    "inferred": "Suitability, maturity, risk and recommendation are researcher judgments.",
+    "proposed": "ANE integration or contract design, not implemented or approved.",
+    "unknown": "Not established by this milestone; null versions are intentional.",
+    "reported_execution": "Coordinator execution report inspected; its runs/artifacts were not independently reproduced or audited by the research milestone.",
+    "collection": "GitHub repository, latest default-branch commit, decoded license and README APIs were read independently, not as an atomic release snapshot. License refs below are observed blob SHAs where available. Revision is an observed commit, not a tested installation or latest release claim.",
+    "tests": "Offline structural consistency only; tests do not prove claims or live documentation correctness."
+  },
+  "gates": {
+    "architecture_approval": "pending",
+    "real_provider_poc": "pending",
+    "baseline_experiment": "pending",
+    "application_evaluation": "not-executed",
+    "paid_model_experiment": "not-executed",
+    "native_tool_plumbing": "coordinator-report-inspected"
+  },
+  "tools": [
+    {
+      "id": "opencode", "name": "OpenCode", "category": "coding-agent", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "aa08bb2e347e694c12293e232f0f07cb7f99c1cf", "version": null,
+      "license": "MIT", "license_caveat": "Repository license; hosted/model services have separate terms. Observed dev commit is not asserted to identify the V2 binary documented on the website.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/anomalyco/opencode/license", "ref": "6439474beed8e0271df9862eff97ffd70ec2464c", "check_status": "observed_documentation"},
+        "feature": {"url": "https://opencode.ai/docs/api", "ref": "V2 live docs checked 2026-11-11; experimental HTTP surface", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/anomalyco/opencode/commits/aa08bb2e347e694c12293e232f0f07cb7f99c1cf", "ref": "2026-11-11T15:42:29Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "aider", "name": "Aider", "category": "coding-agent", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "5dc9490bb35f9729ef2c95d00a19ccd30c26339c", "version": null,
+      "license": "Apache-2.0", "license_caveat": "LICENSE.txt; model services separate. Python scripting API explicitly unsupported by documentation.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/Aider-AI/aider/license", "ref": "d645695673349e3947e8e5ae42332d0ac3164cd7", "check_status": "observed_documentation"},
+        "feature": {"url": "https://aider.chat/docs/scripting.html", "ref": "live docs checked 2026-11-11", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/Aider-AI/aider/commits/5dc9490bb35f9729ef2c95d00a19ccd30c26339c", "ref": "2026-05-22T14:02:20Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "openspec", "name": "OpenSpec", "category": "specification", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "a959be77cf045ea3156dc5089c9e2f1d6ce9ce70", "version": null,
+      "license": "MIT", "license_caveat": "Project LICENSE, not licenses of integrated assistants or community schemas.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/Fission-AI/OpenSpec/license", "ref": "84c125ae7b8ee08dc5b6e06358ebb6134f45a4c4", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/Fission-AI/OpenSpec/readme", "ref": "README.md on main observed during collection", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/Fission-AI/OpenSpec/commits/a959be77cf045ea3156dc5089c9e2f1d6ce9ce70", "ref": "2026-11-10T23:01:21Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "spec-kit", "name": "GitHub Spec Kit", "category": "specification", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "40dd00f39763ccf653ccb18deb684d006f522176", "version": null,
+      "license": "MIT", "license_caveat": "Core LICENSE; community catalogs are explicitly not audits or endorsements.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/github/spec-kit/license", "ref": "28a50fa22639e32febe14e4ffc7a732b0ba8c90a", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/github/spec-kit/readme", "ref": "README.md on main observed during collection", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/github/spec-kit/commits/40dd00f39763ccf653ccb18deb684d006f522176", "ref": "2026-11-11T14:11:08Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "rmf", "name": "Eclipse RMF / ProR", "category": "specification", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "b711d21a259d78b93ce76ccaa3a0d73ac446fcd6", "version": "0.14.0 listed by Eclipse project page (2016-03-01)",
+      "license": "EPL-1.0", "license_caveat": "Root license API 404. EPL text checked in releng product; file headers/NOTICE and third-party terms need artifact-level review. Old GitHub mirror does not establish current project-wide inactivity.",
+      "evidence": {
+        "license": {"url": "https://raw.githubusercontent.com/eclipse-rmf/org.eclipse.rmf/b711d21a259d78b93ce76ccaa3a0d73ac446fcd6/org.eclipse.rmf.releng.product/epl-v10.html", "ref": "b711d21a259d78b93ce76ccaa3a0d73ac446fcd6", "check_status": "observed_documentation"},
+        "feature": {"url": "https://projects.eclipse.org/projects/modeling.mdt.rmf", "ref": "Eclipse project page; ReqIF reference implementation and ProR GUI", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/eclipse-rmf/org.eclipse.rmf/commits/b711d21a259d78b93ce76ccaa3a0d73ac446fcd6", "ref": "2015-09-16T10:40:12Z; mirror only", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "oslc", "name": "OSLC specifications", "category": "specification", "classification": "standard",
+      "checked_on": "2026-11-11", "revision": "829005202d921a90cf2ed8607f2c97917f66e018", "version": "Repository README lists Core 3.0 and Requirements Management 2.1; publication status must be checked per specification",
+      "license": "Apache-2.0 source / CC-BY-4.0 specification documentation + OASIS non-assertion covenant", "license_caveat": "Root license API 404; README refers to oslc-admin/LICENSE.md, read in full. A standard is not an installed connector. Drafts and published specifications differ.",
+      "evidence": {
+        "license": {"url": "https://raw.githubusercontent.com/oslc-op/oslc-admin/master/LICENSE.md", "ref": "mutable master checked 2026-11-11", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/oslc-op/oslc-specs/readme", "ref": "README.md on master; HTTP/RDF-oriented lifecycle interfaces", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/oslc-op/oslc-specs/commits/829005202d921a90cf2ed8607f2c97917f66e018", "ref": "2026-06-02T16:10:22Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "tree-sitter", "name": "Tree-sitter", "category": "static-analysis", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "8a476cb87443c11e63b23f797af8927c60755e13", "version": null,
+      "license": "MIT", "license_caveat": "Runtime/generator license does not establish individual grammar licenses.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/tree-sitter/tree-sitter/license", "ref": "971b81f9a86c0c91827e225aeac9159a13bfd3c1", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/tree-sitter/tree-sitter/readme", "ref": "README.md on master; incremental concrete syntax tree", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/tree-sitter/tree-sitter/commits/8a476cb87443c11e63b23f797af8927c60755e13", "ref": "2026-11-11T03:27:02Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "jdtls", "name": "Eclipse JDT LS", "category": "static-analysis", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "9c3e7936390d8c0b234f6c579f1f4df7c9e9f4a7", "version": null,
+      "license": "EPL-2.0", "license_caveat": "Server LICENSE; bundled dependencies and redistributed modifications need separate review.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/eclipse-jdtls/eclipse.jdt.ls/license", "ref": "e55f34467e251b7e189fbb7ddea7b2a8c7db6847", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/eclipse-jdtls/eclipse.jdt.ls/readme", "ref": "README.md on main; LSP via sockets, pipes or standard streams", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/eclipse-jdtls/eclipse.jdt.ls/commits/9c3e7936390d8c0b234f6c579f1f4df7c9e9f4a7", "ref": "2026-11-09T18:18:56Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "pact", "name": "Pact JVM", "category": "behavioral-verification", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "1928f22476f1a83bc799d3503ebb6d71c8168d31", "version": null,
+      "license": "Apache-2.0", "license_caveat": "pact-jvm LICENSE only; not PactFlow hosted terms or a license audit of brokers/plugins.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/pact-foundation/pact-jvm/license", "ref": "e06d2081865a766a8668acc12878f98b27fc9ea0", "check_status": "observed_documentation"},
+        "feature": {"url": "https://docs.pact.io/", "ref": "Introduction last updated 2026-08-25; contracts by example", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/pact-foundation/pact-jvm/commits/1928f22476f1a83bc799d3503ebb6d71c8168d31", "ref": "2026-11-03T23:58:56Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "openapi-diff", "name": "OpenAPI Diff", "category": "behavioral-verification", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "63850d8074452f5761ce7e7e460307f0f127647a", "version": null,
+      "license": "Apache-2.0", "license_caveat": "Core LICENSE; schema compatibility checks do not establish runtime behavior.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/OpenAPITools/openapi-diff/license", "ref": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/OpenAPITools/openapi-diff/readme", "ref": "README.md on master; CLI, Maven, JSON reports, fail-on-incompatible", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/OpenAPITools/openapi-diff/commits/63850d8074452f5761ce7e7e460307f0f127647a", "ref": "2026-08-05T09:56:33Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "openrewrite", "name": "OpenRewrite core", "category": "modernization", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "a40dbb5fd671a866dbbb3607f67a532462fa646b", "version": null,
+      "license": "Apache-2.0 core; mixed module licensing", "license_caveat": "Root Apache license does NOT cover every newer language module or recipe. Official licensing documentation lists source-available and proprietary components.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/openrewrite/rewrite/license", "ref": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64", "check_status": "observed_documentation"},
+        "feature": {"url": "https://docs.openrewrite.org/licensing/openrewrite-licensing", "ref": "live docs checked 2026-11-11; per-module licensing", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/openrewrite/rewrite/commits/a40dbb5fd671a866dbbb3607f67a532462fa646b", "ref": "2026-11-11T13:05:28Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "rewrite-spring", "name": "OpenRewrite Spring recipes", "category": "modernization", "classification": "source-available-building-block",
+      "checked_on": "2026-11-11", "revision": "9fd585b4d33b36a224dc0263fdcb71d10742c3b9", "version": null,
+      "license": "Moderne Source Available License (not OSI open source)", "license_caveat": "Decoded license API returned MSAL; LICENSE.md is a symlink to LICENSE/moderne-source-available-license.md. Actual license limits internal distribution and prohibits providing functionality to third parties. Not cleared for ANE redistribution/managed service. Every transitive recipe still needs review.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/openrewrite/rewrite-spring/contents/LICENSE/moderne-source-available-license.md?ref=9fd585b4d33b36a224dc0263fdcb71d10742c3b9", "ref": "9fd585b4d33b36a224dc0263fdcb71d10742c3b9", "check_status": "observed_documentation"},
+        "feature": {"url": "https://raw.githubusercontent.com/openrewrite/rewrite-spring/9fd585b4d33b36a224dc0263fdcb71d10742c3b9/src/main/resources/META-INF/rewrite/spring-boot-40.yml", "ref": "org.openrewrite.java.spring.boot4.UpgradeSpringBoot_4_0; source inspected, not executed", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/openrewrite/rewrite-spring/commits/9fd585b4d33b36a224dc0263fdcb71d10742c3b9", "ref": "2026-11-10T18:19:28Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "renovate", "name": "Renovate", "category": "modernization", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "2c8893a9921ba10cce8fbf2916913c46d200c14d", "version": null,
+      "license": "AGPL-3.0-only", "license_caveat": "API reports AGPL-3.0; README badge specifies AGPL-3.0-only; actual license is GNU AGPL v3. Hosted Mend offerings have separate terms. Review obligations before modified network service distribution.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/renovatebot/renovate/license", "ref": "0ad25db4bd1d86c452db3f9602ccdbe172438f52", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/renovatebot/renovate/readme", "ref": "readme.md on main; CLI and deployment options", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/renovatebot/renovate/commits/2c8893a9921ba10cce8fbf2916913c46d200c14d", "ref": "2026-11-11T15:30:55Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "dependabot", "name": "Dependabot core", "category": "modernization", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "4d12fc64248fbc9117efd49144544375302b9f45", "version": null,
+      "license": "MIT", "license_caveat": "Core library only; recommended standalone CLI and hosted GitHub service are separate artifacts/terms, not evaluated installations.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/dependabot/dependabot-core/license", "ref": "28a50fa22639e32febe14e4ffc7a732b0ba8c90a", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/dependabot/dependabot-core/readme", "ref": "README.md on main; recommends dependabot/cli for standalone use", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/dependabot/dependabot-core/commits/4d12fc64248fbc9117efd49144544375302b9f45", "ref": "2026-11-11T15:33:23Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "structurizr", "name": "Structurizr consolidated tooling", "category": "diagram", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "ad34036c5a1227535fc9adea9a0f97de5962189d", "version": "Documentation navigation advertises binaries v2026.09.19; not installed",
+      "license": "Apache-2.0 repository; server commercial extensions separate", "license_caveat": "Docs describe open core: server is exception to free/open commands. Do not extend repository Apache license to server distribution.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/structurizr/structurizr/license", "ref": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64", "check_status": "observed_documentation"},
+        "feature": {"url": "https://docs.structurizr.com/commands", "ref": "live docs checked 2026-11-11; local/export/validate/inspect vs server", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/structurizr/structurizr/commits/ad34036c5a1227535fc9adea9a0f97de5962189d", "ref": "2026-11-07T12:58:41Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "structurizr-cli-legacy", "name": "Structurizr legacy CLI", "category": "diagram", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "64464b193376e8f902383204c96c2ea53bb618b4", "version": null,
+      "license": "Apache-2.0", "license_caveat": "Archived repository, not recommended as a new dependency.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/structurizr/cli/license", "ref": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/structurizr/cli/readme", "ref": "README says no further updates; migrate to consolidated tooling", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/structurizr/cli", "ref": "archived=true; latest observed commit 2026-02-01T14:27:36Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "mermaid", "name": "Mermaid", "category": "diagram", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "49429b28c7fee068334bed4af50eaa2db89a990a", "version": null,
+      "license": "MIT", "license_caveat": "Core library; optional CLI/browser packaging dependencies not audited.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/mermaid-js/mermaid/license", "ref": "2e5daebd2ad0fb200080a27d98aec5f04902acdd", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/mermaid-js/mermaid/readme", "ref": "README.md on develop; text diagrams and linked separate CLI", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/mermaid-js/mermaid/commits/49429b28c7fee068334bed4af50eaa2db89a990a", "ref": "2026-11-11T09:04:46Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "github-cli", "name": "GitHub CLI", "category": "scm", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "233b470d3a189e89cf6fa69624e11c3fa9387d81", "version": null,
+      "license": "MIT", "license_caveat": "gh client only; GitHub hosting/Actions service terms and quotas separate.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/cli/cli/license", "ref": "b6a58a9572cbd7e4550f8205a9c4fd199cd442f2", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/cli/cli/readme", "ref": "README.md on trunk; issues/PRs; actual gh issue view/gh api read calls used for research", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/cli/cli/commits/233b470d3a189e89cf6fa69624e11c3fa9387d81", "ref": "2026-11-11T14:26:39Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "actions", "name": "GitHub Actions runner", "category": "ci", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "8cfa1049f86781d141056082d73802d56cd2b433", "version": null,
+      "license": "MIT", "license_caveat": "Runner software only, not hosted Actions service or third-party action licenses.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/actions/runner/license", "ref": "f97f5c674845bbb3a82cea59afcc307d43acb072", "check_status": "observed_documentation"},
+        "feature": {"url": "https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions", "ref": "live docs checked 2026-11-11; least privilege and untrusted-code boundaries", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/actions/runner/commits/8cfa1049f86781d141056082d73802d56cd2b433", "ref": "2026-11-11T12:17:49Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "wasmtime", "name": "Wasmtime", "category": "platform", "classification": "building-block",
+      "checked_on": "2026-11-11", "revision": "1d10469d7a95857ffe241cfe74583c656a7b5d35", "version": null,
+      "license": "Apache-2.0 WITH LLVM-exception", "license_caveat": "GitHub detection says Apache-2.0; actual LICENSE includes LLVM Exceptions. Runtime support is not Java/Spring compatibility evidence.",
+      "evidence": {
+        "license": {"url": "https://raw.githubusercontent.com/bytecodealliance/wasmtime/1d10469d7a95857ffe241cfe74583c656a7b5d35/LICENSE", "ref": "1d10469d7a95857ffe241cfe74583c656a7b5d35", "check_status": "observed_documentation"},
+        "feature": {"url": "https://docs.wasmtime.dev/examples-wasip2.html", "ref": "live WASIp2 example uses wasi:cli/run@0.2.0; not a latest WASI version assertion", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/bytecodealliance/wasmtime/commits/1d10469d7a95857ffe241cfe74583c656a7b5d35", "ref": "2026-11-11T00:46:44Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "kantra", "name": "Konveyor Kantra", "category": "static-analysis", "classification": "adjacent-product",
+      "checked_on": "2026-11-11", "revision": "d05ca62ef7ab4335301bd3c41acd71dd462338f2", "version": null,
+      "license": "Apache-2.0", "license_caveat": "Kantra root license; bundled rules, JDT LS, containers and assets need separate artifact review.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/konveyor/kantra/license", "ref": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/konveyor/kantra/readme", "ref": "README.md on main; CLI analysis/transformation, containerless/hybrid modes", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/konveyor/kantra/commits/d05ca62ef7ab4335301bd3c41acd71dd462338f2", "ref": "2026-11-04T15:48:34Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "kai", "name": "Konveyor AI", "category": "coding-agent", "classification": "adjacent-product",
+      "checked_on": "2026-11-11", "revision": "1a47a4d529313a7fdb5ed0e07c2c88d06bd51a1a", "version": null,
+      "license": "Apache-2.0", "license_caveat": "Repository license; models/providers and related containers separate.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/konveyor/kai/license", "ref": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/konveyor/kai/readme", "ref": "README.md on main; static analysis + AI; MCP solution server and analysis RPC", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/konveyor/kai/commits/1a47a4d529313a7fdb5ed0e07c2c88d06bd51a1a", "ref": "2026-11-06T16:55:39Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "backstage", "name": "Backstage", "category": "catalog", "classification": "adjacent-product",
+      "checked_on": "2026-11-11", "revision": "da0d8f70995b926da6ba08deee9bf0c59a471cba", "version": null,
+      "license": "Apache-2.0", "license_caveat": "Core repository; plugins and hosted commercial distributions separately licensed.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/backstage/backstage/license", "ref": "72ea3a85b0ee807370d34ff9bef32e0f2c7e0c92", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/backstage/backstage/readme", "ref": "README.md on master; developer portal framework/software catalog", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/backstage/backstage/commits/da0d8f70995b926da6ba08deee9bf0c59a471cba", "ref": "2026-11-11T15:50:40Z", "check_status": "observed_documentation"}
+      }
+    },
+    {
+      "id": "capra", "name": "Eclipse Capra (observed GitHub mirror)", "category": "traceability", "classification": "adjacent-product",
+      "checked_on": "2026-11-11", "revision": "e22b69938209bae6f7945f5e514b41f3d996d42c", "version": null,
+      "license": "EPL-2.0", "license_caveat": "Observed mirror license; current canonical distribution/activity not established here.",
+      "evidence": {
+        "license": {"url": "https://api.github.com/repos/eclipse-capra/capra/license", "ref": "e23ece2c852415800ac224b74ede6c5849f6f88d", "check_status": "observed_documentation"},
+        "feature": {"url": "https://api.github.com/repos/eclipse-capra/capra/readme", "ref": "README.md on master; extensible trace links/matrices/impact visualizations", "check_status": "observed_documentation"},
+        "maintenance": {"url": "https://api.github.com/repos/eclipse-capra/capra/commits/e22b69938209bae6f7945f5e514b41f3d996d42c", "ref": "2021-05-05T14:17:10Z; mirror only", "check_status": "observed_documentation"}
+      }
+    }
+  ],
+  "reference_sources": [
+    {"id": "opencode-v2-intro", "url": "https://opencode.ai/docs/", "checked_on": "2026-11-11", "ref": "live V2 installation docs", "check_status": "observed_documentation"},
+    {"id": "opencode-v2-cli", "url": "https://opencode.ai/docs/cli", "checked_on": "2026-11-11", "ref": "live V2 CLI docs; run and shared background service", "check_status": "observed_documentation"},
+    {"id": "spring-boot-4-guide", "url": "https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-4.0-Migration-Guide", "checked_on": "2026-11-11", "ref": "page displayed edited Jun 28 2026, 68 revisions; mutable wiki", "check_status": "observed_documentation"},
+    {"id": "cloud-run-contract", "url": "https://cloud.google.com/run/docs/container-contract", "checked_on": "2026-11-11", "ref": "live container runtime contract; service revision unknown", "check_status": "observed_documentation"},
+    {"id": "reqif-1.2", "url": "https://www.omg.org/spec/ReqIF/1.2/About-ReqIF", "checked_on": "2026-11-11", "ref": "formal/16-07-01; 1.2 July 2016; IPR mode RF-Limited, not a software SPDX license", "check_status": "observed_documentation"},
+    {"id": "lsp-3.17", "url": "https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/", "checked_on": "2026-11-11", "ref": "3.17 previous; navigation labels 3.18 current and 3.19 upcoming; capability negotiation required", "check_status": "observed_documentation"},
+    {"id": "wasmtime-intro", "url": "https://docs.wasmtime.dev/", "checked_on": "2026-11-11", "ref": "live book; runtime, CLI/library, host-mediated WASI interfaces", "check_status": "observed_documentation"},
+    {"id": "konveyor-landscape", "url": "https://konveyor.io/", "checked_on": "2026-11-11", "ref": "live project site; Hub, Kantra and AI; no latest version inferred from old release post", "check_status": "observed_documentation"},
+    {"id": "moderne-landscape", "url": "https://docs.openrewrite.org/licensing/openrewrite-licensing", "checked_on": "2026-11-11", "ref": "live docs distinguish Apache, source available and proprietary; catalog moving to Code Genome Project", "check_status": "observed_documentation"},
+    {"id": "aws-transform-landscape", "url": "https://aws.amazon.com/transform/", "checked_on": "2026-11-11", "ref": "live commercial product page; product/version and contract terms not independently audited; vendor claims not measured", "check_status": "observed_documentation"}
+  ],
+  "related_execution_reports": [
+    {
+      "id": "integration-gate-19",
+      "repository_path": "docs/verification/INTEGRATION_GATE.md",
+      "checked_on": "2026-11-11",
+      "check_status": "reported_execution",
+      "source_location": "Coordinator integration-gate-19 worktree; report read, not modified. Integration into shared branch is coordinator-owned.",
+      "baseline_ref": "06f3e5338afcaec0e827b72619df4d1279e69876",
+      "reported_gate_ref": "57aae63",
+      "reported_ci_url": "https://github.com/marcinpz/agent-native-engineering/actions/runs/43053661730",
+      "reported_results": {"full_tests_passed": 573, "source_cli_steps_passed": 25, "installed_wheel_cli_steps_passed": 25},
+      "reported_environment": {"git": "2.53.0", "python": "3.12.9", "uv": "0.6.7"},
+      "reported_local_artifact_path": "/tmp/opencode/ane-integration-gate-19-20261111",
+      "scope": "Native Git + LSM CLI + unittest composition, source preservation and model trust checks.",
+      "exclusions": ["Independent research rerun or CI/artifact audit", "Spring Boot/Maven/OpenRewrite/OpenCode execution", "real provider acceptance", "paid agent comparison", "semantic equivalence"]
+    }
+  ],
+  "failed_lookups": [
+    {"url": "https://api.github.com/repos/konveyor/konveyor", "check_status": "http-404", "checked_on": "2026-11-11", "resolution": "Use official konveyor.io links to kantra and kai; do not invent a repository."},
+    {"url": "https://docs.openrewrite.org/recipes/java/spring/boot4/upgradespringboot_4_0", "check_status": "http-404", "checked_on": "2026-11-11", "resolution": "Inspected pinned spring-boot-40.yml source; catalog docs not relied upon."},
+    {"url": "https://docs.wasmtime.dev/stability-wasi-proposals.html", "check_status": "http-404", "checked_on": "2026-11-11", "resolution": "Read book index and WASIp2 example; no latest WASI version asserted."},
+    {"url": "https://wasi.dev/interfaces", "check_status": "http-404", "checked_on": "2026-11-11", "resolution": "Do not use as capability evidence."},
+    {"url": "https://docs.pact.io/getting_started/what_is_pact", "check_status": "http-404", "checked_on": "2026-11-11", "resolution": "Read current documentation root Introduction."},
+    {"url": "https://open-services.net/spec/core/", "check_status": "http-404", "checked_on": "2026-11-11", "resolution": "Use observed OSLC repository README, explicitly not proof of publication status."},
+    {"url": "https://docs.oasis-open.org/oslc-op/core/v3.0/os/oslc-core.html", "check_status": "http-404", "checked_on": "2026-11-11", "resolution": "Normative publication status remains pending per specification."}
+  ]
+}

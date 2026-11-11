@@ -1,0 +1,266 @@
+{
+  "proposal_version": "research-0.1",
+  "id": "contract.synthetic-order-service",
+  "title": "Synthetic order service: portable System Contract proposal",
+  "status": "proposed",
+  "synthetic": true,
+  "production_schema": false,
+  "architecture_approval": "pending",
+  "checked_on": "2026-11-11",
+  "scope": "Illustrative requirements/behaviors and platform assessment; no actual application was imported, executed or approved.",
+  "source_registry": "docs/research/ecosystem-sources.json",
+  "semantic_equivalence_guarantee": false,
+  "provenance_axes": {"origin": ["declared", "inferred", "observed"], "verification": ["unverified", "verified"]},
+  "claim_policy": "Origin and verification are independent LSM provenance axes; verification never changes origin or implies approval. Known origins have a nonempty source. Unavailable facts have status unknown, null provenance and an unknown_reason, not a new origin. Verification is scoped to an explicit method, immutable artifact/run identity, environment and coverage. Reading documentation observes a documented statement, not application behavior or approved intent. This example contains no verified provenance or performed application observation.",
+  "requirements": [
+    {
+      "id": "req.order-auth",
+      "statement": "Only an authenticated customer may read or change that customer's orders.",
+      "provenance": {"origin": "declared", "source": "urn:ane:synthetic:order-feature-intent", "verification": "unverified"},
+      "owner": "synthetic-product-owner",
+      "approval": {"status": "pending", "actor": null, "approved_revision": null},
+      "acceptance_criteria": [
+        "An unauthenticated request is denied without disclosing order data.",
+        "A different customer cannot observe or change another customer's order."
+      ],
+      "behavior_ids": ["behavior.order-access"],
+      "evidence_ids": ["evidence.synthetic-intent"],
+      "unknown_ids": ["unknown.existing-policy"]
+    },
+    {
+      "id": "req.cancel-before-dispatch",
+      "statement": "An eligible customer can cancel an order before dispatch without causing duplicate refunds.",
+      "provenance": {"origin": "declared", "source": "urn:ane:synthetic:order-feature-intent", "verification": "unverified"},
+      "owner": "synthetic-product-owner",
+      "approval": {"status": "pending", "actor": null, "approved_revision": null},
+      "acceptance_criteria": [
+        "After successful cancellation, a repeated request does not cause an additional refund.",
+        "Cancellation racing with dispatch follows a policy approved before implementation."
+      ],
+      "behavior_ids": ["behavior.cancel-order"],
+      "evidence_ids": ["evidence.synthetic-intent"],
+      "unknown_ids": ["unknown.cancel-race-policy", "unknown.actual-application"]
+    }
+  ],
+  "behaviors": [
+    {
+      "id": "behavior.order-access",
+      "provenance": {"origin": "declared", "source": "urn:ane:synthetic:order-feature-intent", "verification": "unverified"},
+      "actor": "customer",
+      "preconditions": ["An order belongs to a customer; identity and ownership policy await approval."],
+      "stimulus": "A customer requests another customer's order.",
+      "observable_response": "Access is denied without leaking protected order details.",
+      "observable_side_effects": "No order state changes.",
+      "failure_behavior": "Exact protocol error mapping remains unspecified, not inferred from an implementation.",
+      "requirement_ids": ["req.order-auth"],
+      "interface_ids": ["interface.orders"],
+      "evidence_ids": ["evidence.synthetic-intent"],
+      "verification": {"status": "not-executed", "execution_evidence_ids": [], "coverage": "No application tests or identity configuration inspected."}
+    },
+    {
+      "id": "behavior.cancel-order",
+      "provenance": {"origin": "declared", "source": "urn:ane:synthetic:order-feature-intent", "verification": "unverified"},
+      "actor": "eligible customer",
+      "preconditions": ["An authenticated owner has an order not yet dispatched."],
+      "stimulus": "The same cancellation request is submitted twice.",
+      "observable_response": "The approved result identifies cancellation without a second refund.",
+      "observable_side_effects": "One approved cancellation/refund outcome; retry and transaction boundaries await review.",
+      "failure_behavior": "Dispatch races, payment failures and offline retries are blocking unknowns.",
+      "requirement_ids": ["req.cancel-before-dispatch", "req.order-auth"],
+      "interface_ids": ["interface.orders", "interface.payment"],
+      "evidence_ids": ["evidence.synthetic-intent"],
+      "verification": {"status": "not-executed", "execution_evidence_ids": [], "coverage": "Proposed examples only; no universal exactly-once or equivalence proof."}
+    }
+  ],
+  "interfaces": [
+    {
+      "id": "interface.orders",
+      "provenance": {"origin": "declared", "source": "urn:ane:synthetic:order-feature-intent", "verification": "unverified"},
+      "consumer_ids": ["component.web", "component.mobile"],
+      "provider_id": "component.orders",
+      "direction": "request-response",
+      "protocol": "unspecified",
+      "schema_artifact": null,
+      "compatibility_policy": "Propose additive changes; existing consumer requirements must be identified and approved.",
+      "requirement_ids": ["req.order-auth", "req.cancel-before-dispatch"],
+      "evidence_ids": ["evidence.synthetic-intent"]
+    },
+    {
+      "id": "interface.payment",
+      "status": "unknown",
+      "provenance": null,
+      "unknown_reason": "No actual payment provider, protocol or interface artifact was inspected.",
+      "consumer_ids": ["component.orders"],
+      "provider_id": "component.external-payment",
+      "direction": "outbound",
+      "protocol": "unknown",
+      "schema_artifact": null,
+      "compatibility_policy": "Inventory provider refund/idempotency behavior and failure contract before approval.",
+      "requirement_ids": ["req.cancel-before-dispatch"],
+      "evidence_ids": []
+    }
+  ],
+  "components": [
+    {"id": "component.web", "technology": null, "repository_ref": null, "status": "unknown", "provenance": null, "unknown_reason": "Illustrative role only; actual web application/repository inventory unavailable."},
+    {"id": "component.mobile", "technology": null, "repository_ref": null, "status": "unknown", "provenance": null, "unknown_reason": "Illustrative role only; actual mobile application/repository inventory unavailable."},
+    {"id": "component.orders", "technology": null, "repository_ref": null, "status": "unknown", "provenance": null, "unknown_reason": "Illustrative role only; actual service/repository inventory unavailable."},
+    {"id": "component.external-payment", "technology": null, "repository_ref": null, "status": "unknown", "provenance": null, "unknown_reason": "Actual payment provider and its implementation facts are unavailable."}
+  ],
+  "constraints": [
+    {
+      "id": "constraint.identity",
+      "provenance": {"origin": "declared", "source": "urn:ane:synthetic:order-feature-intent", "verification": "unverified"},
+      "scope": "system",
+      "required_capability": "authenticated-identity-and-authorization",
+      "severity": "blocking",
+      "requirement_ids": ["req.order-auth"],
+      "evidence_ids": ["evidence.synthetic-intent"]
+    },
+    {
+      "id": "constraint.refund-consistency",
+      "provenance": {"origin": "declared", "source": "urn:ane:synthetic:order-feature-intent", "verification": "unverified"},
+      "scope": "system",
+      "required_capability": "durable-idempotent-state-transition",
+      "severity": "blocking",
+      "requirement_ids": ["req.cancel-before-dispatch"],
+      "evidence_ids": ["evidence.synthetic-intent"]
+    },
+    {
+      "id": "constraint.required-network",
+      "provenance": {"origin": "inferred", "source": "urn:ane:synthetic:order-feature-intent", "verification": "unverified"},
+      "scope": "interface.payment",
+      "required_capability": "payment-provider-compatible-outbound-protocol-and-identity",
+      "severity": "blocking",
+      "requirement_ids": ["req.cancel-before-dispatch"],
+      "evidence_ids": [],
+      "inference_limit": "Hypothesis implied by the synthetic feature, not an observed TCP/TLS/JDBC dependency."
+    }
+  ],
+  "deployment_observations": [
+    {
+      "id": "observation.cloud-run-docs",
+      "provenance": {"origin": "observed", "source": "https://cloud.google.com/run/docs/container-contract", "verification": "unverified"},
+      "scope": "documentation-only; no actual deployment",
+      "resource_scope": "Cloud Run HTTP service",
+      "general_container_constraints": ["Linux x86_64 executable container", "ephemeral writable local filesystem"],
+      "documented_constraints": ["HTTP service ingress on 0.0.0.0 at configured PORT", "HTTP service platform TLS termination", "HTTP service response within configured request timeout, including startup time"],
+      "jobs_note": "Cloud Run jobs should exit upon completion, not listen on a port or start a web server. HTTP-service ingress/TLS/request-timeout requirements are not universal jobs/worker-pool constraints; consult each resource-specific contract.",
+      "evidence_ids": ["evidence.cloud-run-docs"],
+      "limit": "Reports official documentation, not the synthetic application's current platform."
+    }
+  ],
+  "target_profiles": [
+    {
+      "id": "target.unspecified-wasi-host",
+      "status": "unknown",
+      "provenance": null,
+      "unknown_reason": "No target host/runtime/interface profile was selected or inspected.",
+      "platform": "WASM/WASI hosting candidate; not selected",
+      "runtime_version": null,
+      "interface_profile": null,
+      "offered_capabilities": [],
+      "evidence_ids": [],
+      "unknown_ids": ["unknown.target-host", "unknown.java-wasi-path"]
+    }
+  ],
+  "constraint_assessments": [
+    {
+      "id": "assessment.wasi-identity",
+      "constraint_id": "constraint.identity",
+      "target_id": "target.unspecified-wasi-host",
+      "status": "unknown",
+      "provenance": null,
+      "unknown_reason": "Target identity capability evidence is unavailable.",
+      "evidence_ids": [],
+      "unknown_ids": ["unknown.target-host"],
+      "decision": "No migration authorization while a mandatory identity capability lacks evidence.",
+      "exception_id": null
+    },
+    {
+      "id": "assessment.wasi-refund-state",
+      "constraint_id": "constraint.refund-consistency",
+      "target_id": "target.unspecified-wasi-host",
+      "status": "unknown",
+      "provenance": null,
+      "unknown_reason": "Target storage/transaction guarantees and approved race policy are unavailable.",
+      "evidence_ids": [],
+      "unknown_ids": ["unknown.target-host", "unknown.cancel-race-policy"],
+      "decision": "Missing storage/transaction guarantees block approval, not permission to weaken requirements.",
+      "exception_id": null
+    },
+    {
+      "id": "assessment.wasi-payment-network",
+      "constraint_id": "constraint.required-network",
+      "target_id": "target.unspecified-wasi-host",
+      "status": "unknown",
+      "provenance": null,
+      "unknown_reason": "Actual payment protocol requirements and target network capabilities are unavailable.",
+      "evidence_ids": [],
+      "unknown_ids": ["unknown.target-host", "unknown.actual-application"],
+      "decision": "Do not assume target networking is absent or compatible; inspect a concrete host/profile.",
+      "exception_id": null
+    }
+  ],
+  "conflict_representation": {
+    "status": "proposed",
+    "required_fields": ["id", "constraint_id", "target_id", "status", "provenance", "evidence_ids", "decision", "exception_id"],
+    "assessment_statuses": ["satisfied", "conflict", "unknown"],
+    "rule": "A conflict requires evidence of an unmet mandatory capability. Unknown is an assessment status, not an origin: use null provenance plus unknown_reason when the fact is unavailable. Unknown blocks approval where material, and is not promoted to conflict or satisfied without evidence. Known origins use LSM provenance with independent origin and verification.",
+    "exception_policy": "Only a human-approved, versioned requirement exception can accept a conflict; record approver, rationale, affected requirements and supersession. This example has no approved exceptions."
+  },
+  "approved_exceptions": [],
+  "evidence": [
+    {
+      "id": "evidence.synthetic-intent",
+      "provenance": {"origin": "declared", "source": "urn:ane:synthetic:order-feature-intent", "verification": "unverified"},
+      "artifact_uri": "urn:ane:synthetic:order-feature-intent",
+      "artifact_ref": null,
+      "source_id": null,
+      "provider_id": null,
+      "method": "Fabricated research scenario, not imported or approved user intent.",
+      "recorded_on": "2026-11-11",
+      "coverage": "Only the illustrative statements in this artifact.",
+      "exclusions": ["Existing application requirements", "human approval", "runtime behavior"],
+      "execution_status": "not-executed"
+    },
+    {
+      "id": "evidence.cloud-run-docs",
+      "provenance": {"origin": "observed", "source": "https://cloud.google.com/run/docs/container-contract", "verification": "unverified"},
+      "artifact_uri": "https://cloud.google.com/run/docs/container-contract",
+      "artifact_ref": null,
+      "source_id": "cloud-run-contract",
+      "provider_id": null,
+      "method": "Read official documentation; mutable page ref unknown. Observed/unverified provenance is scoped only to the documentation, not an application observation, behavioral verification or approval. Interpretations retain inferred/unverified provenance separately.",
+      "recorded_on": "2026-11-11",
+      "coverage": "Documented Cloud Run container constraints only.",
+      "exclusions": ["Actual deployment", "current application configuration", "WASI host support"],
+      "execution_status": "not-executed"
+    }
+  ],
+  "unknowns": [
+    {"id": "unknown.existing-policy", "status": "unknown", "provenance": null, "unknown_reason": "Approved existing intent/access policy has not been supplied.", "question": "What intent and access/error policy is actually approved?", "owner": "human-reviewer-pending", "blocking": true, "required_evidence": "Reviewed requirement revision and API/auth acceptance examples."},
+    {"id": "unknown.cancel-race-policy", "status": "unknown", "provenance": null, "unknown_reason": "Approved concurrency/refund policy has not been supplied.", "question": "What outcome is required for dispatch races, payment failure and offline retry?", "owner": "human-reviewer-pending", "blocking": true, "required_evidence": "Approved state-transition/idempotency policy and independent test oracles."},
+    {"id": "unknown.actual-application", "status": "unknown", "provenance": null, "unknown_reason": "No actual application inventory has been performed.", "question": "Which repositories, versions, dependencies, interfaces and tests actually exist?", "owner": "research-followup", "blocking": true, "required_evidence": "Authorized immutable source/config refs and scoped provider findings."},
+    {"id": "unknown.target-host", "status": "unknown", "provenance": null, "unknown_reason": "No target platform and capability evidence have been supplied.", "question": "Which host/runtime/profile supplies the required network, data, identity and operational capabilities?", "owner": "human-architect-pending", "blocking": true, "required_evidence": "Named target profile/version and capability evidence; isolated experiments only after approval."},
+    {"id": "unknown.java-wasi-path", "status": "unknown", "provenance": null, "unknown_reason": "Actual Java/Spring dependencies and supported target toolchain path are unavailable.", "question": "If the application is Java/Spring, is its actual runtime/native/reflection dependency set supported by the exact target toolchain?", "owner": "research-followup", "blocking": true, "required_evidence": "Existing supported compilation/runtime path plus bounded tests; no inference from Linux native-image or a Rust WASI example."}
+  ],
+  "decisions": [
+    {
+      "id": "decision.wasi-evaluation-hold",
+      "status": "proposed",
+      "provenance": {"origin": "inferred", "source": "docs/research/ECOSYSTEM_ASSESSMENT.md#c-cloud-run--wasmwasi-feasibility", "verification": "unverified"},
+      "approval": "pending",
+      "requirement_ids": ["req.order-auth", "req.cancel-before-dispatch"],
+      "unknown_ids": ["unknown.actual-application", "unknown.target-host", "unknown.java-wasi-path"],
+      "rationale": "No-go for migration authorization on current evidence; not a universal claim that Java-to-WASM is impossible.",
+      "supersedes": null
+    }
+  ],
+  "verification_summary": {
+    "status": "not-executed",
+    "executed_application_checks": [],
+    "approved_requirements": [],
+    "guarantee": "None. Structural consistency tests of this proposal do not prove behavior, upstream documentation correctness or semantic equivalence.",
+    "pending": ["Actual fixture assessment", "provider PoC", "held-out behavior checks", "full agent-only baseline experiment", "human architecture/requirements approval"]
+  }
+}
