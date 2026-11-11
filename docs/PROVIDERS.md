@@ -63,7 +63,7 @@ Caller inputs are deep-copied before adapter execution.
 
 ## Explicit limits
 
-Only read-only `discover` is implemented. Dedicated evidence retrieval, planning, code
+The discovery envelope implements only read-only `discover`. Dedicated evidence retrieval, planning, code
 changes, tests, PRs, deployment and reconciliation remain unsupported capability
 catalog entries, not adapters. Even approval cannot enable them: this API has no
 policy argument or write executor. No parser, source scan, build, migration, agent,
@@ -78,6 +78,63 @@ A stable HEAD does not prove a clean or unchanged working tree.
 This experiment does not close #22's future real provider capabilities or establish
 semantic equivalence, application compatibility, cost improvements or authenticity
 of imported evidence. Consequential future integrations need separate approval.
+
+## Existing JUnit report import (partial #22)
+
+Design/acceptance: import existing bytes without commands, model mutations or trust
+promotion; bind deterministic identities to artifact SHA-256 plus explicit repository
+ID and full commit; reject malformed/contradictory reports and suppress raw output.
+The standalone `lsm.junit.import_junit(path, repository=..., commit=...)` and CLI
+return a companion result, **not** the discovery `{model}` contract. They reuse
+provider identity/status, diagnostics, observation time and read-only permissions;
+`invoke`, Git/mock discovery and workspace refresh are unchanged. This avoids
+pretending report outcomes are discovery nodes or widening every existing caller.
+
+```sh
+uv run lsm import-junit examples/junit.xml \
+  --repository repository:demo \
+  --commit 0123456789012345678901234567890123456789 > report-evidence.json
+```
+
+Exit 0/status `succeeded` means import succeeded, **not tests passed**. Inspect
+`data.cases[].outcome` (`passed`, `failure`, `error`, `skipped`) and per-suite
+aggregate counts. Invalid input yields exit 1/status `failed`, null data and fixed
+diagnostics. The illustrative fixture intentionally contains a failure and skip.
+
+`data.binding` is a **user attestation**, not proof the report was produced from
+that repository/commit. No Git existence/cleanliness, execution, authenticity,
+measured verification or approval is established. Every report stays observed,
+unverified, confidence unknown; no model is read or modified. `source_ref` is a
+content-addressed `sha256:` reference to the exact input bytes, not a retrieval
+service; retain the original artifact separately. IDs also include binding and
+case positions (reordering/changing the report intentionally changes identities).
+Only `observed_at` varies across identical imports.
+
+The bounded dialect accepts UTF-8 `testsuite`/`testsuites` nesting with named cases,
+at most 2 MiB, 20,000 XML elements and depth 32. Optional declared aggregate counts
+must match descendant cases; multiple outcome markers, empty reports and unsupported
+structural elements fail closed. DTDs/entities and all `<!` declarations (including
+comments/CDATA) are rejected before parsing; no external entities, network,
+XInclude or execution is supported. This intentionally rejects some JUnit dialects.
+Failure/error/skip text and attributes, stdout/stderr and properties are never
+projected. Names/classnames are bounded and use shared redaction, which is not a
+complete secret detector: review metadata before publication. Suite counts describe
+the report's claims, not independently verified execution. There is no requirement
+mapping, workspace integration, automatic claim promotion or general test executor.
+
+Suite outcomes prioritize error, failure, empty, all-skipped, then passed (counts
+still disclose mixed skips). Unsupported testcase `status` values other than `run`
+and dialect-specific `result` flags are rejected rather than guessed as passing.
+The companion JSON shape is documented here, not accepted by discovery-specific
+`validate_result`/schema; no portable evidence validation API or persisted
+workspace import is claimed by this slice.
+
+Local slice verification (2026-11-11): focused JUnit/provider/discovery tests
+**132 passed** (21 JUnit cases); full `uv run pytest` **760 passed**;
+`uv run ruff format --check .` and `uv run ruff check .` passed.
+The documented fixture import and `uv run python scripts/adoption_smoke.py`
+passed; adoption still reported unchanged source bytes/HEADs and no application
+builds/tests. These checks do not authenticate any imported report.
 
 ## Local verification (2026-11-11)
 

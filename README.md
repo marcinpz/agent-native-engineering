@@ -54,6 +54,7 @@ uv run lsm show my-system.yaml --json
 ```sh
 uv run lsm provider capabilities
 uv run python scripts/adoption_smoke.py
+uv run lsm import-junit examples/junit.xml --repository repository:demo --commit 0123456789012345678901234567890123456789
 ```
 
 The adoption smoke creates synthetic Spring Boot/Maven/Cloud Run and Python source
@@ -63,6 +64,10 @@ and metadata-only cleanup. **No application is built, tested, started, migrated 
 deployed.** Framework/runtime names are explicit fixture declarations, not inferred
 compatibility. See [workspace usage](docs/WORKSPACE.md), [provider contract](docs/PROVIDERS.md)
 and [experiment verification](docs/verification/ADOPTION_EXPERIMENT.md).
+
+JUnit import reads an existing report only; it never runs tests. Source commit binding
+is user-attested, not authenticated; outcomes remain unverified. Import success is
+not test success. See the [bounded report contract](docs/PROVIDERS.md#existing-junit-report-import-partial-22).
 
 `init` creates a valid empty model. `import` validates/converts JSON/YAML; it does
 not scan repositories. Writes refuse existing destinations unless `--force` is

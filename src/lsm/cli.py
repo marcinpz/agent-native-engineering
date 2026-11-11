@@ -36,6 +36,12 @@ def _parser():
     inspector.add_argument("--node", help="stable node ID")
     inspector.add_argument("--json", action="store_true", dest="json_output")
     configure(commands)
+    junit = commands.add_parser(
+        "import-junit", help="read an existing JUnit report; never run tests"
+    )
+    junit.add_argument("path", type=Path)
+    junit.add_argument("--repository", required=True, help="explicit repository model ID")
+    junit.add_argument("--commit", required=True, help="user-attested full source commit hash")
     return parser
 
 
@@ -72,6 +78,12 @@ def _write(model, path, force):
 def main(argv=None):
     args = _parser().parse_args(argv)
     try:
+        if args.command == "import-junit":
+            from lsm.junit import import_junit
+
+            result = import_junit(args.path, repository=args.repository, commit=args.commit)
+            print(json.dumps(result, sort_keys=True))
+            return 0 if result["status"] == "succeeded" else 1
         result = dispatch(args)
         if result is not None:
             return result

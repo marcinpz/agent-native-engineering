@@ -1,0 +1,7 @@
+<testsuites tests="3" failures="1" errors="0" skipped="1">
+  <testsuite name="illustrative-only" tests="3" failures="1" skipped="1">
+    <testcase classname="Demo" name="passing"/>
+    <testcase classname="Demo" name="failing"><failure>Not projected</failure></testcase>
+    <testcase classname="Demo" name="skipping"><skipped/></testcase>
+  </testsuite>
+</testsuites>
