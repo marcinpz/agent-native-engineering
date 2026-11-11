@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agent-native-engineering.org/schemas/provider.schema.json",
+  "$id": "urn:lsm:schema:provider:1.0",
   "title": "Read-only provider result 1.0",
   "type": "object",
   "additionalProperties": false,

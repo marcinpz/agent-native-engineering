@@ -154,12 +154,16 @@ def _read(directory):
         if validate_model(model) or model["schema_version"] != "1.0":
             raise ValueError("Invalid workspace model")
         evidence = json.loads(data["evidence.json"])
-        from lsm.providers import validate_result
+        from lsm.providers import request_digest, validate_result
 
         if validate_result(evidence):
             raise ValueError("Invalid workspace provider evidence")
         if evidence["status"] != "succeeded" or evidence["errors"]:
             raise ValueError("Incomplete workspace provider evidence")
+        if evidence["capability"] != "discover" or evidence["request_digest"] != request_digest(
+            "discover", project["manifest"]
+        ):
+            raise ValueError("Workspace discovery request binding mismatch")
         if project["provider"] != evidence["provider"]:
             raise ValueError("Workspace provider binding mismatch")
         if model["model"] != project["manifest"]["model"]:

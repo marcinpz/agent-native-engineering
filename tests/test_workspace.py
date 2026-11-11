@@ -1,5 +1,6 @@
 """Tiny generated local repositories; no application builds or source execution."""
 
+import hashlib
 import json
 import os
 import subprocess
@@ -144,6 +145,33 @@ def test_mock_replacement_preserves_entire_bundle(source):
     workspace.init_workspace(manifest, base, target, provider=MockProvider(model))
     assert workspace.workspace_status(target)["valid"]
     assert json.loads((target / "model.json").read_bytes()) == model
+
+
+@pytest.mark.parametrize("field,value", [("capability", "deploy"), ("request_digest", "0" * 64)])
+def test_evidence_is_bound_to_actual_discovery_request(source, monkeypatch, field, value):
+    base, _, manifest = source
+    target = base / ".ane"
+    workspace.init_workspace(manifest, base, target)
+    evidence_path = target / "evidence.json"
+    evidence = json.loads(evidence_path.read_bytes())
+    evidence[field] = value
+    evidence_path.write_text(json.dumps(evidence, indent=2, sort_keys=True) + "\n")
+    state_path = target / "state.json"
+    state = json.loads(state_path.read_bytes())
+    state["hashes"]["evidence.json"] = hashlib.sha256(evidence_path.read_bytes()).hexdigest()
+    state_path.write_text(json.dumps(state, indent=2, sort_keys=True) + "\n")
+    before = snapshot(target)
+    assert workspace.workspace_status(target)["valid"] is False
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Inconsistent saved evidence must fail before provider invocation")
+
+    monkeypatch.setattr("lsm.providers.invoke", forbidden)
+    with pytest.raises(ValueError, match="request binding"):
+        workspace.refresh_workspace(target, base, apply=True)
+    with pytest.raises(ValueError, match="request binding"):
+        workspace.cleanup_workspace(target, apply=True)
+    assert snapshot(target) == before
 
 
 @pytest.mark.parametrize(

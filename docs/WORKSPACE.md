@@ -37,6 +37,9 @@ budget). `model.json` is the sole current model. `evidence.json` retains the nor
 provider collection envelope; `context.json` and `docs/{index.md,context.mmd,
 components.mmd,traceability.md,onboarding.md}` reuse existing projectors. `state.json`
 contains fixed managed-artifact hashes, not executable deletion instructions.
+Saved evidence must also match the `discover` capability and canonical request
+digest of the stored manifest; updating a file hash cannot excuse a mismatched
+request. This is an internal-consistency check, not authenticated provenance.
 
 Initialization writes only new metadata. Refresh defaults to a semantic diff;
 `--apply` updates only managed metadata. A HEAD change updates repository provenance

@@ -16,8 +16,7 @@ result = invoke(GitProvider(), "discover", manifest=manifest, base_dir=source_ba
 assert validate_result(result) == []
 if result["status"] == "succeeded":
     model = result["data"]["model"]
-    replay = invoke(MockProvider(model), "discover", manifest=manifest,
-                    base_dir=source_base)
+    replay = invoke(MockProvider(model), "discover", manifest=manifest, base_dir=source_base)
     assert replay["data"]["model"] == model
 ```
 
@@ -50,6 +49,8 @@ Validation is not authentication or behavior verification.
 - `request_digest`: SHA-256 of canonical capability/manifest/existing JSON, excluding
   provider identity and machine-specific source base. Same inputs give the same
   digest; models and evidence IDs are stable while timestamps may differ.
+  Consumers can use `request_digest(capability, manifest, existing=None)` to check
+  persisted request binding without invoking a provider or reading source files.
 - `observed_at`: actual UTC collection timestamp. Workspace refresh may preserve
   the first unchanged envelope rather than treating time alone as model drift.
 

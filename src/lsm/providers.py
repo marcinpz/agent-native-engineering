@@ -28,7 +28,8 @@ def _digest(value):
     ).hexdigest()
 
 
-def _request(capability, manifest, existing):
+def request_digest(capability, manifest, existing=None):
+    """Canonical request identity, shared with persisted consumer validation."""
     # Provider identity and machine-specific base paths are not semantic inputs.
     return _digest({"capability": capability, "manifest": manifest, "existing": existing})
 
@@ -159,7 +160,9 @@ class GitProvider:
 
     def discover(self, *, manifest, base_dir, existing=None):
         model = discover(manifest, base_dir, existing)
-        return _result(self.describe(), "discover", _request("discover", manifest, existing), model)
+        return _result(
+            self.describe(), "discover", request_digest("discover", manifest, existing), model
+        )
 
 
 class MockProvider:
@@ -181,7 +184,7 @@ class MockProvider:
         if validate_model(self._model):
             raise ValueError("Invalid replay model")
         return _result(
-            self.describe(), "discover", _request("discover", manifest, existing), self._model
+            self.describe(), "discover", request_digest("discover", manifest, existing), self._model
         )
 
 
@@ -196,7 +199,7 @@ def invoke(provider, capability, *, manifest, base_dir, existing=None) -> dict:
     if not isinstance(capability, str) or not capability:
         return _result(fallback, "unsupported", digest, error="unsupported_capability")
     try:
-        digest = _request(capability, manifest, existing)
+        digest = request_digest(capability, manifest, existing)
         descriptor = deepcopy(provider.describe())
         descriptor_schema = _schema()["$defs"]["descriptor"]
         if list(Draft202012Validator(descriptor_schema).iter_errors(descriptor)):
