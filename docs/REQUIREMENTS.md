@@ -9,7 +9,9 @@ the library does not resolve model references.
 
 ```python
 from lsm.requirements import (
-    create_requirement, refine_requirement, transition_requirement,
+    create_requirement,
+    refine_requirement,
+    transition_requirement,
     validate_requirement,
 )
 
@@ -46,7 +48,8 @@ answered["acceptance_criteria"] = [
 ]
 proposal = transition_requirement(answered, "proposed", actor="owner")
 policy = {
-    "version": "1.0", "humans": ["owner"],
+    "version": "1.0",
+    "humans": ["owner"],
     "permissions": {"approve_requirements": ["owner"]},
 }
 approved = transition_requirement(proposal, "approved", policy, "owner")
