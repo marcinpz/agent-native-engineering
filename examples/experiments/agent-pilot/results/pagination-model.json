@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "model": {
+    "id": "model.pagination",
+    "title": "pagination"
+  },
+  "nodes": [
+    {
+      "id": "requirement.feature",
+      "type": "requirement",
+      "title": "pagination",
+      "version": 1,
+      "approval": "pending",
+      "description": "Add cursor pagination without breaking API.list(owner), which returns (200, list of {id, text}) sorted by id. Add API.page(owner, limit=2, cursor=None) returning (200, {items: [...], next_cursor: string-or-null}). Filter ownership before pagination, sort lexicographically by id, return at most limit items, and set next_cursor to the last returned id only when more owned items exist. Cursor is an exclusive id boundary, need not exist, and is not an offset; insertions before it must not repeat prior items. Empty strings are valid cursors. Reject non-string non-null cursors and limits other than integers 1..5 (including bool) with (400, {error: ...}). Empty/beyond-end pages have empty items and null next_cursor. Add Client.iter_items(limit=2) yielding all owned items by following page cursors; propagate non-200 pages as ValueError(status). Store.add(item) must make subsequent calls see the new item; retain Store.owned and Client.items behavior. No external I/O or services.",
+      "acceptance_criteria": [
+        "Add cursor pagination without breaking API.list(owner), which returns (200, list of {id, text}) sorted by id",
+        "Add API.page(owner, limit=2, cursor=None) returning (200, {items: [...], next_cursor: string-or-null})",
+        "Filter ownership before pagination, sort lexicographically by id, return at most limit items, and set next_cursor to the last returned id only when more owned items exist",
+        "Cursor is an exclusive id boundary, need not exist, and is not an offset; insertions before it must not repeat prior items",
+        "Empty strings are valid cursors",
+        "Reject non-string non-null cursors and limits other than integers 1..5 (including bool) with (400, {error: ...})",
+        "Empty/beyond-end pages have empty items and null next_cursor",
+        "Add Client.iter_items(limit=2) yielding all owned items by following page cursors; propagate non-200 pages as ValueError(status)",
+        "Store.add(item) must make subsequent calls see the new item; retain Store.owned and Client.items behavior",
+        "No external I/O or services."
+      ],
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#requirements",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "component.domain",
+      "type": "component",
+      "title": "domain",
+      "version": 1,
+      "description": "domain.py defines dataclasses and response serialization.",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#architecture",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "component.store",
+      "type": "component",
+      "title": "store",
+      "version": 1,
+      "description": "store.py owns mutable in-memory records; shared Store instances retain state.",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#architecture",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "component.api",
+      "type": "component",
+      "title": "api",
+      "version": 1,
+      "description": "api.py exposes status/body tuples and ownership policy.",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#architecture",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "component.client",
+      "type": "component",
+      "title": "client",
+      "version": 1,
+      "description": "client.py binds owner and raises ValueError(status) on errors.",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#architecture",
+        "verification": "unverified"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge.domain",
+      "type": "implemented_by",
+      "source": "requirement.feature",
+      "target": "component.domain",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#requirements",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.store",
+      "type": "implemented_by",
+      "source": "requirement.feature",
+      "target": "component.store",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#requirements",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.api",
+      "type": "implemented_by",
+      "source": "requirement.feature",
+      "target": "component.api",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#requirements",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.client",
+      "type": "implemented_by",
+      "source": "requirement.feature",
+      "target": "component.client",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#requirements",
+        "verification": "unverified"
+      }
+    }
+  ]
+}

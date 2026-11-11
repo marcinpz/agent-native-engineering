@@ -1,0 +1,67 @@
+"""Coordinator-only reconciliation of a frozen trial with genuine JUnit evidence."""
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+from lsm.evidence import evaluate_junit
+from lsm.junit import import_junit
+from lsm.validation import validate_model
+
+root = Path('/tmp/opencode/ane-pilot-traceability')
+root.mkdir(exist_ok=False)
+source = Path('/tmp/opencode/ane-pilot-runs/cancel-ane')
+repo = root / 'snapshot'
+shutil.copytree(source, repo, ignore=shutil.ignore_patterns('.git', '__pycache__', '.pytest_cache'))
+env = dict(os.environ, GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull,
+           PYTHONDONTWRITEBYTECODE='1', PYTEST_DISABLE_PLUGIN_AUTOLOAD='1')
+def git(*args):
+    return subprocess.check_output(['git', '-C', str(repo), '-c', 'user.name=Pilot',
+        '-c', 'user.email=pilot@example.invalid', *args], env=env, text=True).strip()
+git('init', '-q')
+git('add', '.')
+git('commit', '-qm', 'Freeze completed cancellation ANE trial for evidence reconciliation')
+commit = git('rev-parse', 'HEAD')
+env['PYTHONPATH'] = str(repo)
+xml = root / 'junit.xml'
+command = [sys.executable, '-m', 'pytest', '-q', '-c', '/dev/null',
+           '/tmp/opencode/ane-pilot-evaluator/accept_cancel.py', '--junitxml=' + str(xml)]
+run = subprocess.run(command, cwd=repo, env=env, text=True, capture_output=True)
+(root / 'execution.json').write_text(json.dumps(dict(command=command, commit=commit,
+    stdout=run.stdout, stderr=run.stderr, returncode=run.returncode), indent=2) + '\n')
+assert run.returncode == 0, run.stdout
+model = json.loads(Path('/tmp/opencode/ane-pilot-evaluator/cancel-model.json').read_text())
+provenance = {'origin': 'declared', 'source': 'coordinator explicit acceptance mapping',
+              'verification': 'unverified'}
+model['nodes'].append(dict(id='repo.trial', type='repository', title='Frozen trial',
+                          version=1, provenance=provenance))
+report = import_junit(xml, repository='repo.trial', commit=commit)
+mapping = dict(schema_version='1.0', report_id=report['data']['id'], mappings=[])
+for index, case in enumerate(report['data']['cases']):
+    identifier = f'test.acceptance.{index}'
+    model['nodes'].append(dict(id=identifier, type='test', title=case['name'],
+                              version=1, provenance=provenance))
+    model['edges'].append(dict(id=f'edge.acceptance.{index}', type='verified_by',
+        source='requirement.feature', target=identifier, provenance=provenance))
+    mapping['mappings'].append(dict(case_id=case['id'], test_id=identifier,
+                                    requirement_ids=['requirement.feature']))
+assert validate_model(model) == []
+result = evaluate_junit(xml, model=model, mapping=mapping, repository='repo.trial',
+                        commit=commit, expected_commit=commit)
+assert result['status'] == 'succeeded'
+assert result['data']['requirements'][0]['mapped_test_outcome'] == 'passed'
+assert result['data']['requirements'][0]['verification'] == 'unverified'
+assert result['data']['requirements'][0]['coverage'] == 'unknown'
+stale = evaluate_junit(xml, model=model, mapping=mapping, repository='repo.trial',
+                       commit=commit, expected_commit='0' * 40)
+assert stale['data']['freshness'] == 'stale'
+for name, data in [('model', model), ('mapping', mapping), ('evaluation', result),
+                   ('stale-demonstration', stale)]:
+    (root / (name + '.json')).write_text(json.dumps(data, indent=2) + '\n')
+assert git('status', '--porcelain') == ''
+print(json.dumps(dict(commit=commit, mapped_tests=len(mapping['mappings']),
+    requirement=result['data']['requirements'][0], freshness=result['data']['freshness'],
+    stale_demonstration='expected commit deliberately set to all-zero placeholder',
+    artifacts=str(root))))

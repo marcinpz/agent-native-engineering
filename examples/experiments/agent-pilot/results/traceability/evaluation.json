@@ -1,0 +1,184 @@
+{
+  "schema_version": "1.0",
+  "provider": {
+    "id": "junit",
+    "version": "1.0"
+  },
+  "capability": "evaluate_test_evidence",
+  "status": "succeeded",
+  "data": {
+    "report_id": "junit-report:3036157da56e32f44d3fd52d2012351dec88893e60d1a3fe7ffdade95b7f5d9d",
+    "source_ref": "sha256:09f1d92ca00334bfb73afb26f005fdf88b3a058dc118c2c7ea523aab0039335e",
+    "binding": {
+      "repository": "repo.trial",
+      "commit": "718108c08e720bb15a85a25281acf0783ae06ec3",
+      "kind": "user_attestation"
+    },
+    "expected_commit": "718108c08e720bb15a85a25281acf0783ae06ec3",
+    "freshness": "current",
+    "model_digest": "d27f2755cc65886cb2d1c52088f9ffe19425cfd100a1960eec24f57ba70661d8",
+    "mapping_digest": "094b0574bf97c541b9fcbc08891ea4c0e251582a14437512b2a3ceb35ce030bb",
+    "origin": "observed",
+    "verification": "unverified",
+    "confidence": null,
+    "tests": [
+      {
+        "test_id": "test.acceptance.0",
+        "requirement_ids": [
+          "requirement.feature"
+        ],
+        "cases": [
+          {
+            "case_id": "junit-case:852449fd360a746a278fbcba5e896e42c6c09f9c817823eddc3af0a1f6bd868d",
+            "outcome": "passed"
+          }
+        ],
+        "outcome": "passed"
+      },
+      {
+        "test_id": "test.acceptance.1",
+        "requirement_ids": [
+          "requirement.feature"
+        ],
+        "cases": [
+          {
+            "case_id": "junit-case:beb0140a0540b0afed8cfabfcf39fa338d28e1603c8b106e6b5a75c9e1db6b3c",
+            "outcome": "passed"
+          }
+        ],
+        "outcome": "passed"
+      },
+      {
+        "test_id": "test.acceptance.2",
+        "requirement_ids": [
+          "requirement.feature"
+        ],
+        "cases": [
+          {
+            "case_id": "junit-case:588d4a83e3839a985ed208bd2f98c4125bf5b15721dde9eb1b669f6ed5b45a85",
+            "outcome": "passed"
+          }
+        ],
+        "outcome": "passed"
+      },
+      {
+        "test_id": "test.acceptance.3",
+        "requirement_ids": [
+          "requirement.feature"
+        ],
+        "cases": [
+          {
+            "case_id": "junit-case:33bb73952165cec96d32c8040f9de2fcf66bbe1566df25f3f895fc6d6af7bdca",
+            "outcome": "passed"
+          }
+        ],
+        "outcome": "passed"
+      },
+      {
+        "test_id": "test.acceptance.4",
+        "requirement_ids": [
+          "requirement.feature"
+        ],
+        "cases": [
+          {
+            "case_id": "junit-case:a7f110467dbdcd5da30763769601647e49d22f7ea246f22a676f58018f895e19",
+            "outcome": "passed"
+          }
+        ],
+        "outcome": "passed"
+      },
+      {
+        "test_id": "test.acceptance.5",
+        "requirement_ids": [
+          "requirement.feature"
+        ],
+        "cases": [
+          {
+            "case_id": "junit-case:75c35a4ecabfa53a66c24bb55d35ab6fb4099b60d75f3eb0dae937f18a7d0e44",
+            "outcome": "passed"
+          }
+        ],
+        "outcome": "passed"
+      },
+      {
+        "test_id": "test.acceptance.6",
+        "requirement_ids": [
+          "requirement.feature"
+        ],
+        "cases": [
+          {
+            "case_id": "junit-case:bbbd2d6e8a4bc3a316c240b81af69806524bf1702dc9ff9ac86b0d7bc2d3e70c",
+            "outcome": "passed"
+          }
+        ],
+        "outcome": "passed"
+      },
+      {
+        "test_id": "test.acceptance.7",
+        "requirement_ids": [
+          "requirement.feature"
+        ],
+        "cases": [
+          {
+            "case_id": "junit-case:4f1ca965ba4bc9fee44866e4c08dcd2be3afc57d9dce142157645a58e1f56072",
+            "outcome": "passed"
+          }
+        ],
+        "outcome": "passed"
+      },
+      {
+        "test_id": "test.acceptance.8",
+        "requirement_ids": [
+          "requirement.feature"
+        ],
+        "cases": [
+          {
+            "case_id": "junit-case:923b3b496e7f2d240c1eb70343e7c222c8597865d37d3472adb56730e6734d78",
+            "outcome": "passed"
+          }
+        ],
+        "outcome": "passed"
+      },
+      {
+        "test_id": "test.acceptance.9",
+        "requirement_ids": [
+          "requirement.feature"
+        ],
+        "cases": [
+          {
+            "case_id": "junit-case:9f5549c98844d0cb1b3c50505a28c1dba6ee501147d5800d145d9677b3542b79",
+            "outcome": "passed"
+          }
+        ],
+        "outcome": "passed"
+      }
+    ],
+    "requirements": [
+      {
+        "requirement_id": "requirement.feature",
+        "test_ids": [
+          "test.acceptance.0",
+          "test.acceptance.1",
+          "test.acceptance.2",
+          "test.acceptance.3",
+          "test.acceptance.4",
+          "test.acceptance.5",
+          "test.acceptance.6",
+          "test.acceptance.7",
+          "test.acceptance.8",
+          "test.acceptance.9"
+        ],
+        "mapped_test_outcome": "passed",
+        "coverage": "unknown",
+        "verification": "unverified"
+      }
+    ],
+    "unmapped_case_count": 0
+  },
+  "errors": [],
+  "permissions": {
+    "source_access": "read",
+    "writes_performed": false
+  },
+  "observed_at": "2026-11-11T18:44:42.968553Z"
+}

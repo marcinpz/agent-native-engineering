@@ -1,0 +1,362 @@
+{
+  "schema_version": "1.0",
+  "model": {
+    "id": "model.cancel",
+    "title": "cancel"
+  },
+  "nodes": [
+    {
+      "id": "requirement.feature",
+      "type": "requirement",
+      "title": "cancel",
+      "version": 1,
+      "approval": "pending",
+      "description": "Add idempotent cancellation with refunds. API.cancel(owner, order_id, key) returns (status, body). Successful cancellation returns 200 and {id, state, refunded}; refunded is integer cents. Only paid orders can be cancelled; shipped orders return 409. Unknown or foreign orders return 404. Empty or non-string keys return 400. A key is scoped to owner: replay on the same order returns the original success without a second refund; reuse for a different order returns 409, even if that order is unknown. Failed requests must not reserve a key. A different key on an already cancelled order returns 409. Store refunds must be observable in store.refunds as (order_id, cents) tuples and persist across API instances sharing a Store. Client.cancel(order_id, key) returns the success body or raises ValueError(status). Existing get behavior remains unchanged. No external I/O or services.",
+      "acceptance_criteria": [
+        "Add idempotent cancellation with refunds",
+        "API.cancel(owner, order_id, key) returns (status, body)",
+        "Successful cancellation returns 200 and {id, state, refunded}; refunded is integer cents",
+        "Only paid orders can be cancelled; shipped orders return 409",
+        "Unknown or foreign orders return 404",
+        "Empty or non-string keys return 400",
+        "A key is scoped to owner: replay on the same order returns the original success without a second refund; reuse for a different order returns 409, even if that order is unknown",
+        "Failed requests must not reserve a key",
+        "A different key on an already cancelled order returns 409",
+        "Store refunds must be observable in store.refunds as (order_id, cents) tuples and persist across API instances sharing a Store",
+        "Client.cancel(order_id, key) returns the success body or raises ValueError(status)",
+        "Existing get behavior remains unchanged",
+        "No external I/O or services."
+      ],
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#requirements",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "component.domain",
+      "type": "component",
+      "title": "domain",
+      "version": 1,
+      "description": "domain.py defines dataclasses and response serialization.",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#architecture",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "component.store",
+      "type": "component",
+      "title": "store",
+      "version": 1,
+      "description": "store.py owns mutable in-memory records; shared Store instances retain state.",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#architecture",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "component.api",
+      "type": "component",
+      "title": "api",
+      "version": 1,
+      "description": "api.py exposes status/body tuples and ownership policy.",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#architecture",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "component.client",
+      "type": "component",
+      "title": "client",
+      "version": 1,
+      "description": "client.py binds owner and raises ValueError(status) on errors.",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#architecture",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "repo.trial",
+      "type": "repository",
+      "title": "Frozen trial",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "test.acceptance.0",
+      "type": "test",
+      "title": "test_refund_replay_and_cross_instance",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "test.acceptance.1",
+      "type": "test",
+      "title": "test_failure_does_not_reserve[missing-404]",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "test.acceptance.2",
+      "type": "test",
+      "title": "test_failure_does_not_reserve[v-404]",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "test.acceptance.3",
+      "type": "test",
+      "title": "test_failure_does_not_reserve[s-409]",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "test.acceptance.4",
+      "type": "test",
+      "title": "test_invalid_keys[]",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "test.acceptance.5",
+      "type": "test",
+      "title": "test_invalid_keys[None]",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "test.acceptance.6",
+      "type": "test",
+      "title": "test_invalid_keys[1]",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "test.acceptance.7",
+      "type": "test",
+      "title": "test_invalid_keys[False]",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "test.acceptance.8",
+      "type": "test",
+      "title": "test_invalid_keys[key4]",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "test.acceptance.9",
+      "type": "test",
+      "title": "test_client_error",
+      "version": 1,
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge.domain",
+      "type": "implemented_by",
+      "source": "requirement.feature",
+      "target": "component.domain",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#requirements",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.store",
+      "type": "implemented_by",
+      "source": "requirement.feature",
+      "target": "component.store",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#requirements",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.api",
+      "type": "implemented_by",
+      "source": "requirement.feature",
+      "target": "component.api",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#requirements",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.client",
+      "type": "implemented_by",
+      "source": "requirement.feature",
+      "target": "component.client",
+      "provenance": {
+        "origin": "declared",
+        "source": "README.md#requirements",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.acceptance.0",
+      "type": "verified_by",
+      "source": "requirement.feature",
+      "target": "test.acceptance.0",
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.acceptance.1",
+      "type": "verified_by",
+      "source": "requirement.feature",
+      "target": "test.acceptance.1",
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.acceptance.2",
+      "type": "verified_by",
+      "source": "requirement.feature",
+      "target": "test.acceptance.2",
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.acceptance.3",
+      "type": "verified_by",
+      "source": "requirement.feature",
+      "target": "test.acceptance.3",
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.acceptance.4",
+      "type": "verified_by",
+      "source": "requirement.feature",
+      "target": "test.acceptance.4",
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.acceptance.5",
+      "type": "verified_by",
+      "source": "requirement.feature",
+      "target": "test.acceptance.5",
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.acceptance.6",
+      "type": "verified_by",
+      "source": "requirement.feature",
+      "target": "test.acceptance.6",
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.acceptance.7",
+      "type": "verified_by",
+      "source": "requirement.feature",
+      "target": "test.acceptance.7",
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.acceptance.8",
+      "type": "verified_by",
+      "source": "requirement.feature",
+      "target": "test.acceptance.8",
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    },
+    {
+      "id": "edge.acceptance.9",
+      "type": "verified_by",
+      "source": "requirement.feature",
+      "target": "test.acceptance.9",
+      "provenance": {
+        "origin": "declared",
+        "source": "coordinator explicit acceptance mapping",
+        "verification": "unverified"
+      }
+    }
+  ]
+}

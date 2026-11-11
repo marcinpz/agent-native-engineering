@@ -1,0 +1,14 @@
+{
+  "command": [
+    "/tmp/opencode/ane-agent-pilot/.venv/bin/python3",
+    "-m",
+    "pytest",
+    "-q",
+    "/tmp/opencode/ane-pilot-runs/cancel-baseline",
+    "--junitxml=/tmp/opencode/ane-agent-pilot/examples/experiments/agent-pilot/results/cancel-baseline/all-agent-tests/junit.xml"
+  ],
+  "cwd": "/tmp/opencode/ane-pilot-runs/cancel-baseline",
+  "returncode": 0,
+  "stdout": "..........                                                               [100%]\n- generated xml file: /tmp/opencode/ane-agent-pilot/examples/experiments/agent-pilot/results/cancel-baseline/all-agent-tests/junit.xml -\n10 passed in 0.04s\n",
+  "stderr": ""
+}

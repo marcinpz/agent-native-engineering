@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/tmp/opencode/ane-evidence-traceability/.venv/bin/python3",
+    "-m",
+    "pytest",
+    "-q",
+    "-c",
+    "/dev/null",
+    "/tmp/opencode/ane-pilot-evaluator/accept_cancel.py",
+    "--junitxml=/tmp/opencode/ane-pilot-traceability/junit.xml"
+  ],
+  "commit": "718108c08e720bb15a85a25281acf0783ae06ec3",
+  "stdout": "..........                                                               [100%]\n=============================== warnings summary ===============================\n../../ane-evidence-traceability/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:475\n  /tmp/opencode/ane-evidence-traceability/.venv/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /dev/.pytest_cache/v/cache/nodeids: [Errno 13] Permission denied: '/dev/pytest-cache-files-c_9ebamv'\n    config.cache.set(\"cache/nodeids\", sorted(self.cached_nodeids))\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n------ generated xml file: /tmp/opencode/ane-pilot-traceability/junit.xml ------\n10 passed, 1 warning in 0.12s\n",
+  "stderr": "",
+  "returncode": 0
+}

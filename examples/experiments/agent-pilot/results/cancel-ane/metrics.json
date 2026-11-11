@@ -1,0 +1,39 @@
+{
+  "session_id": "ses_e34156742ffewaNzilw94k2ile",
+  "model": {
+    "id": "gpt-6.1-sol",
+    "providerID": "openai",
+    "variant": "low"
+  },
+  "outcome": "succeeded",
+  "time": {
+    "created": 1794422511810,
+    "updated": 1794422552289,
+    "busy": 1794422511821,
+    "idle": 1794422552295
+  },
+  "session_wall_seconds": 40.485,
+  "tokens_reported_by_harness": {
+    "input": 3144,
+    "output": 1414,
+    "reasoning": 21,
+    "cache": {
+      "read": 30592,
+      "write": 0
+    }
+  },
+  "cost_reported_by_harness": 0,
+  "actual_cost_usd": null,
+  "cost_note": "Harness model pricing was unavailable; zero is not evidence of free usage.",
+  "assistant_messages": 5,
+  "tool_calls": {
+    "read": 1,
+    "shell": 2,
+    "patch": 1
+  },
+  "tool_errors": {},
+  "shell_commands_for_audit": [
+    "cat TASK.md README.md api.py client.py domain.py store.py test_public.py CONTEXT.json",
+    "/tmp/opencode/ane-agent-pilot/.venv/bin/python -m pytest"
+  ]
+}

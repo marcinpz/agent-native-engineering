@@ -1,0 +1,63 @@
+{
+  "session_id": "ses_e341c4fe0ffeNyPzDIXAzasJLz",
+  "model": {
+    "id": "gpt-6.1-sol",
+    "providerID": "openai",
+    "variant": "low"
+  },
+  "outcome": "succeeded",
+  "time": {
+    "created": 1794422059043,
+    "updated": 1794422475736,
+    "busy": 1794422059057,
+    "idle": 1794422475743
+  },
+  "session_wall_seconds": 416.7,
+  "tokens_reported_by_harness": {
+    "input": 17195,
+    "output": 10193,
+    "reasoning": 268,
+    "cache": {
+      "read": 722816,
+      "write": 0
+    }
+  },
+  "cost_reported_by_harness": 0,
+  "actual_cost_usd": null,
+  "cost_note": "Harness model pricing was unavailable; zero is not evidence of free usage.",
+  "assistant_messages": 37,
+  "tool_calls": {
+    "read": 3,
+    "shell": 22,
+    "patch": 9,
+    "grep": 1,
+    "glob": 1
+  },
+  "tool_errors": {
+    "patch": 1
+  },
+  "shell_commands_for_audit": [
+    "git status --short --branch",
+    "cat README.md docs/IMPLEMENTATION_PLAN.md docs/BENCHMARK.md",
+    "cat src/lsm/context.py examples/shop.json | head -180",
+    "git rev-parse HEAD",
+    "uv run python examples/experiments/agent-pilot/prepare.py > /tmp/opencode/ane-pilot-preparation-output.json",
+    "mv /tmp/opencode/ane-pilot-evaluator /tmp/opencode/ane-pilot-evaluator-failed-preparation",
+    "uv run python examples/experiments/agent-pilot/prepare.py > /tmp/opencode/ane-pilot-preparation-output.json",
+    "uv run ruff check examples/experiments/agent-pilot --fix",
+    "uv run ruff format examples/experiments/agent-pilot",
+    "uv run ruff check examples/experiments/agent-pilot",
+    "mv /tmp/opencode/ane-pilot-runs /tmp/opencode/ane-pilot-runs-preformat",
+    "mv /tmp/opencode/ane-pilot-evaluator /tmp/opencode/ane-pilot-evaluator-preformat",
+    "uv run python examples/experiments/agent-pilot/prepare.py > /tmp/opencode/ane-pilot-preparation-output.json",
+    "cp -r /tmp/opencode/ane-pilot-evaluator/pretrial /tmp/opencode/ane-pilot-evaluator/preparation.json examples/experiments/agent-pilot/",
+    "uv run ruff check examples/experiments/agent-pilot",
+    "uv run pytest -q",
+    "uv run ruff format --check examples/experiments/agent-pilot",
+    "uv run ruff check examples/experiments/agent-pilot",
+    "python -c \"import json; d=json.load(open('/tmp/opencode/ane-pilot-evaluator/preparation.json')); print(d['setup_seconds_including_compile_and_checks']); print([(x['directory'],x['context_seconds'],x['context_bytes']) for x in d['trials']])\"",
+    "uv run python -c \"import json; d=json.load(open('/tmp/opencode/ane-pilot-evaluator/preparation.json')); print(d['setup_seconds_including_compile_and_checks']); print([(x['directory'],x['context_seconds'],x['context_bytes']) for x in d['trials']])\"",
+    "git add examples/experiments/agent-pilot",
+    "git commit -m \"Prepare preregistered matched offline agent pilot fixtures and evaluator\""
+  ]
+}
