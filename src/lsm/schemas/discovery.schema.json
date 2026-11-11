@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lsm:schema:discovery:1.0",
+  "title": "Explicit repository discovery manifest 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "model", "repositories"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "model": {"$ref": "#/$defs/named"},
+    "repositories": {"type": "array", "items": {"$ref": "#/$defs/repository"}},
+    "dependencies": {"type": "array", "items": {"$ref": "#/$defs/dependency"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]*$"},
+    "title": {"type": "string", "minLength": 1},
+    "named": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {"id": {"$ref": "#/$defs/id"}, "title": {"$ref": "#/$defs/title"}}
+    },
+    "repository": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "path", "components"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "title": {"$ref": "#/$defs/title"},
+        "path": {
+          "type": "string",
+          "pattern": "^(?![A-Za-z]:)(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))[^/\\\\\\u0000-\\u001f]+(?:/[^/\\\\\\u0000-\\u001f]+)*$"
+        },
+        "components": {"type": "array", "items": {"$ref": "#/$defs/component"}}
+      }
+    },
+    "component": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"}, "title": {"$ref": "#/$defs/title"},
+        "type": {"enum": ["component", "interface", "implementation", "test"], "default": "component"},
+        "interfaces": {"type": "array", "items": {"$ref": "#/$defs/named"}}
+      },
+      "allOf": [{
+        "if": {"required": ["type"], "properties": {"type": {"enum": ["interface", "implementation", "test"]}}},
+        "then": {"not": {"required": ["interfaces"]}}
+      }]
+    },
+    "dependency": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "source", "target"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "source": {"$ref": "#/$defs/id"}, "target": {"$ref": "#/$defs/id"}
+      }
+    }
+  }
+}

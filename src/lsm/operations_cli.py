@@ -15,6 +15,12 @@ def configure(commands):
     exporter.add_argument("path", type=Path)
     exporter.add_argument("destination", type=Path)
     exporter.add_argument("--force", action="store_true")
+    discovery = commands.add_parser("discover", help="import explicit local repository manifests")
+    discovery.add_argument("manifest", type=Path)
+    discovery.add_argument("destination", type=Path)
+    discovery.add_argument("--base-dir", type=Path, required=True)
+    discovery.add_argument("--existing", type=Path)
+    discovery.add_argument("--force", action="store_true")
 
 
 def write_document(document, destination, force=False):
@@ -55,5 +61,16 @@ def dispatch(args):
 
         write_projection(render_docs(load_model(args.path)), args.destination, args.force)
         print(f"Generated documentation in {args.destination}")
+        return 0
+    if args.command == "discover":
+        from lsm.discovery import discover
+
+        model = discover(
+            load_model(args.manifest),
+            args.base_dir,
+            load_model(args.existing) if args.existing else None,
+        )
+        write_document(model, args.destination, args.force)
+        print(f"Saved {args.destination}")
         return 0
     return None
