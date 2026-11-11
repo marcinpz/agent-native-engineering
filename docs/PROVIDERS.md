@@ -63,7 +63,7 @@ Caller inputs are deep-copied before adapter execution.
 
 ## Explicit limits
 
-Only read-only `discover` is implemented. Evidence collection, planning, code
+Only read-only `discover` is implemented. Dedicated evidence retrieval, planning, code
 changes, tests, PRs, deployment and reconciliation remain unsupported capability
 catalog entries, not adapters. Even approval cannot enable them: this API has no
 policy argument or write executor. No parser, source scan, build, migration, agent,
@@ -71,6 +71,9 @@ service, network operation or application-file write is introduced. Git collecti
 delegates to `lsm.discovery.discover`, including its confined metadata checks.
 Mock replay validates manifests and rejects symlink paths without reading source
 files; it does not establish that its supplied model reflects live repositories.
+Native collection observes committed HEAD metadata and explicit manifest declarations,
+not uncommitted working-tree changes, dependency resolution or application behavior.
+A stable HEAD does not prove a clean or unchanged working tree.
 
 This experiment does not close #22's future real provider capabilities or establish
 semantic equivalence, application compatibility, cost improvements or authenticity

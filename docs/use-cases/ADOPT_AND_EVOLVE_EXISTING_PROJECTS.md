@@ -1,6 +1,10 @@
 # Reference use cases: adopt and evolve existing software
 
-Status: proposed product scenarios; **not yet implemented**. See [integration-first direction](../INTEGRATION_FIRST_ARCHITECTURE.md).
+Status: product scenarios; **not yet fully implemented**. A bounded UC-01 read-only
+manifest/Git adoption experiment is available through #24; see
+[workspace usage](../WORKSPACE.md) and [measured scope](../verification/ADOPTION_EXPERIMENT.md).
+It does not provide automatic application analysis, build/migration or agent execution.
+See [integration-first direction](../INTEGRATION_FIRST_ARCHITECTURE.md).
 
 ## UC-01 — Adopt an existing application with minimal friction
 

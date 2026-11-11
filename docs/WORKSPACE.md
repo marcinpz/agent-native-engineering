@@ -16,6 +16,9 @@ or outside **all** named repositories (for example, an orchestration repository)
 Its parent must exist. Nested application-source paths, symlink ancestors, existing
 targets and traversal are rejected. Pass the explicit source base on every refresh;
 the stored config alone never authorizes source access.
+The input manifest is captured in `project.json`; later edits to an external
+manifest are not silently imported. This prototype requires a new explicit
+initialization for configuration changes, rather than overwriting managed config.
 Any `.git` ancestor is forbidden, including outside the named source repositories.
 Workspace and source-base bindings are absolute and local-only. Copying or moving a
 workspace invalidates its location binding; explicitly initialize new metadata at
@@ -47,6 +50,8 @@ and increments that node's version; unchanged content keeps its version. Timesta
 or provider-envelope-only differences do not rewrite anything, including the first
 collection timestamp. Replacing Git with `MockProvider(model)` does not create new
 trust. Failed/partial collections are never persisted.
+Refresh observes committed HEAD metadata, not uncommitted source edits or newly
+inferred interfaces. It is not a general source/model drift detector.
 Reordering node/edge arrays alone is also a no-op. `context.json` uses the exact
 compact context serialization, without a trailing newline: its UTF-8 file size
 equals the self-inclusive accounting byte count and stays within the budget.
