@@ -8,6 +8,8 @@ An open JSON Schema, Python reference library and offline CLI provide explicit
 schema migration, manifest-based discovery, cited Markdown/Mermaid documentation,
 requirement refinement, semantic change proposals, bounded task context, a
 local-only multi-repository workflow and benchmark preparation/aggregation.
+An experimental read-only Git/mock provider boundary can populate an opt-in
+`.ane/` workspace without running or modifying application source.
 No graph database, LLM, service or UI is required.
 
 ## Fresh-clone setup
@@ -47,6 +49,21 @@ uv run lsm import examples/shop.json my-system.yaml
 uv run lsm show my-system.yaml --json
 ```
 
+## Read-only adoption experiment
+
+```sh
+uv run lsm provider capabilities
+uv run python scripts/adoption_smoke.py
+```
+
+The adoption smoke creates synthetic Spring Boot/Maven/Cloud Run and Python source
+repositories plus local/external `.ane/` metadata. It checks provider replacement,
+unchanged source bytes/HEADs, deterministic refresh, reviewable external-ref diffs,
+and metadata-only cleanup. **No application is built, tested, started, migrated or
+deployed.** Framework/runtime names are explicit fixture declarations, not inferred
+compatibility. See [workspace usage](docs/WORKSPACE.md), [provider contract](docs/PROVIDERS.md)
+and [experiment verification](docs/verification/ADOPTION_EXPERIMENT.md).
+
 `init` creates a valid empty model. `import` validates/converts JSON/YAML; it does
 not scan repositories. Writes refuse existing destinations unless `--force` is
 explicitly supplied. Conversion preserves data, not comments/layout; serialization
@@ -82,6 +99,7 @@ uv run ruff check .
 uv run pytest
 uv run lsm validate examples/shop.json --json
 uv run python scripts/roadmap_smoke.py
+uv run python scripts/adoption_smoke.py
 uv build
 ```
 

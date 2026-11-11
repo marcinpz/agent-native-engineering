@@ -26,9 +26,11 @@ jobs:
           uv run lsm validate examples/context/model.json --json
           uv run lsm validate examples/integration/seed-model.json --json
       - run: uv run python scripts/roadmap_smoke.py
+      - run: uv run python scripts/adoption_smoke.py
       - run: uv build
       - name: Smoke test installed wheel outside checkout
         working-directory: ${{ runner.temp }}
         run: |
           uv run --isolated --no-project --refresh-package agent-native-engineering --python 3.12 --with "${{ github.workspace }}/dist/agent_native_engineering-0.1.0-py3-none-any.whl" lsm validate "${{ github.workspace }}/examples/shop.json" --json
           uv run --isolated --no-project --refresh-package agent-native-engineering --python 3.12 --with "${{ github.workspace }}/dist/agent_native_engineering-0.1.0-py3-none-any.whl" python "${{ github.workspace }}/scripts/roadmap_smoke.py"
+          uv run --isolated --no-project --refresh-package agent-native-engineering --python 3.12 --with "${{ github.workspace }}/dist/agent_native_engineering-0.1.0-py3-none-any.whl" python "${{ github.workspace }}/scripts/adoption_smoke.py"

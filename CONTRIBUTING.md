@@ -23,6 +23,7 @@ uv run lsm validate examples/governance/model-1.1.json --json
 uv run lsm validate examples/changes/before.json --json
 uv run lsm validate examples/changes/offline-sync.json --json
 uv run python scripts/roadmap_smoke.py
+uv run python scripts/adoption_smoke.py
 uv build
 ```
 
