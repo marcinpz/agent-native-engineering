@@ -5,6 +5,7 @@ import json
 import sys
 from pathlib import Path
 
+from lsm.operations_cli import configure, dispatch
 from lsm.storage import ModelIOError, load_model, save_model
 from lsm.validation import validate_model
 
@@ -28,6 +29,7 @@ def _parser():
     inspector.add_argument("path", type=Path)
     inspector.add_argument("--node", help="stable node ID")
     inspector.add_argument("--json", action="store_true", dest="json_output")
+    configure(commands)
     return parser
 
 
@@ -54,6 +56,9 @@ def _write(model, path, force):
 def main(argv=None):
     args = _parser().parse_args(argv)
     try:
+        result = dispatch(args)
+        if result is not None:
+            return result
         if args.command == "init":
             model = {
                 "schema_version": "1.0",
@@ -112,6 +117,14 @@ def main(argv=None):
         else:
             print(f"I/O error: {exc}", file=sys.stderr)
         return 2
+    except ValueError as exc:
+        from lsm.security import redact
+
+        _emit_errors(
+            [{"code": "operation_error", "path": "", "message": redact(str(exc))}],
+            getattr(args, "json_output", False),
+        )
+        return 1
 
 
 if __name__ == "__main__":

@@ -1,0 +1,9 @@
+{
+  "version": "1.0",
+  "humans": ["demo-owner"],
+  "permissions": {
+    "approve_requirements": ["demo-owner"],
+    "approve_changes": ["demo-owner"],
+    "verify": ["demo-owner"]
+  }
+}
