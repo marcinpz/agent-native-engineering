@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "model": {"id": "system.discovery-demo", "title": "Local multi-repository demo"},
+  "nodes": [
+    {
+      "id": "component.backend", "type": "component", "title": "Backend API", "version": 1,
+      "provenance": {"origin": "declared", "source": "manifest:/repositories/0/components/0", "verification": "unverified"}
+    },
+    {
+      "id": "requirement.demo-sync", "type": "requirement", "title": "Sandbox offline-sync intent", "version": 1,
+      "acceptance_criteria": ["A proposed queued edit remains visible while disconnected."],
+      "open_questions": ["Which conflict policy should a human approve?"],
+      "approval": "pending",
+      "description": "Illustrative intent, not working application behavior. Synthetic redaction probe: password=ane-integration-probe-only",
+      "provenance": {"origin": "declared", "source": "examples/integration/README.md", "verification": "unverified"}
+    },
+    {
+      "id": "implementation.demo-sync", "type": "implementation", "title": "Hypothetical queue handler", "version": 1,
+      "description": "Mapping hypothesis only: no implementation was discovered or executed.",
+      "confidence": 0.25,
+      "evidence": ["evidence.demo-scenario"],
+      "provenance": {"origin": "inferred", "source": "examples/integration/README.md", "verification": "unverified"}
+    },
+    {
+      "id": "test.demo-sync", "type": "test", "title": "Proposed queued-edit acceptance test", "version": 1,
+      "description": "Test plan only; no passing application test is claimed.",
+      "evidence": ["evidence.demo-scenario"],
+      "provenance": {"origin": "declared", "source": "examples/integration/README.md", "verification": "unverified"}
+    },
+    {
+      "id": "evidence.demo-scenario", "type": "evidence", "title": "Illustrative scenario description", "version": 1,
+      "uri": "examples/integration/README.md",
+      "provenance": {"origin": "declared", "source": "examples/integration/README.md", "verification": "unverified"}
+    }
+  ],
+  "edges": [
+    {"id":"edge.demo-satisfies","type":"satisfies","source":"component.backend","target":"requirement.demo-sync","provenance":{"origin":"declared","source":"examples/integration/README.md","verification":"unverified"}},
+    {"id":"edge.demo-implementation","type":"implemented_by","source":"requirement.demo-sync","target":"implementation.demo-sync","provenance":{"origin":"inferred","source":"examples/integration/README.md","verification":"unverified"}},
+    {"id":"edge.demo-verification","type":"verified_by","source":"requirement.demo-sync","target":"test.demo-sync","provenance":{"origin":"declared","source":"examples/integration/README.md","verification":"unverified"}}
+  ]
+}

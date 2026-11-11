@@ -1,5 +1,6 @@
 """Fresh-directory integration through the actual public CLI, without skipped coverage."""
 
+import html
 import json
 import subprocess
 import sys
@@ -30,6 +31,7 @@ def test_complete_cli_walkthrough(tmp_path):
         "migrate",
         "discover",
         "validate",
+        "inspect",
         "export",
         "requirement",
         "change",
@@ -47,3 +49,12 @@ def test_complete_cli_walkthrough(tmp_path):
         (output / "whole-repository-baseline.txt").read_bytes()
     )
     assert comparison["agent_outcome_measured"] is False
+    requirement = json.loads((output / "inspected-requirement.json").read_text())
+    assert requirement["approval"] == "pending"
+    assert requirement["provenance"]["origin"] == "declared"
+    implementation = json.loads((output / "inspected-implementation.json").read_text())
+    assert implementation["provenance"]["origin"] == "inferred"
+    assert implementation["provenance"]["verification"] == "unverified"
+    trace = html.unescape((output / "docs" / "traceability.md").read_text())
+    assert "implementation.demo-sync" in trace
+    assert "test.demo-sync" in trace

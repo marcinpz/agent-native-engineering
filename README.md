@@ -89,6 +89,8 @@ CI also smoke-tests the installed wheel outside the checkout. See
 [CONTRIBUTING.md](CONTRIBUTING.md) for review and verification conventions.
 
 - [Getting started](docs/GETTING_STARTED.md): installation and complete CLI demo.
+- [Integration gate](docs/verification/INTEGRATION_GATE.md): joined-flow coverage,
+  actual verification results and explicit limitations.
 - [Model](docs/MODEL.md), [governance](docs/GOVERNANCE.md),
   [discovery](docs/DISCOVERY.md), [documentation](docs/DOCUMENTATION.md).
 - [Requirements](docs/REQUIREMENTS.md), [changes](docs/CHANGES.md),

@@ -67,9 +67,11 @@ schema/references, not evidence authenticity or real behavior.
 
 ```sh
 uv run lsm workflow init "$WORK/demo"
-uv run lsm discover examples/discovery/manifest.json "$WORK/discovered.json" --base-dir "$WORK/demo"
+uv run lsm discover examples/discovery/manifest.json "$WORK/discovered.json" --base-dir "$WORK/demo" --existing examples/integration/seed-model.json
 uv run lsm validate "$WORK/discovered.json" --json
 uv run lsm inspect "$WORK/discovered.json" --node component.backend --json
+uv run lsm inspect "$WORK/discovered.json" --node requirement.demo-sync --json
+uv run lsm inspect "$WORK/discovered.json" --node implementation.demo-sync --json
 uv run lsm export "$WORK/discovered.json" "$WORK/docs"
 ```
 
@@ -78,12 +80,19 @@ repositories containing fixed Python fixtures. Discovery reads only the manifest
 explicit repository roots and confined Git metadata, not arbitrary source trees,
 environment files or remote URLs. It does not infer intent from application code.
 The manifest's logical names are declarations, not discovered production software.
+The integration seed carries illustrative pending requirements, proposed tests and
+an inferred implementation mapping into the same graph; their provenance and
+unverified state must survive discovery. The fake credential probe tests redaction.
+Neither discovery nor a traceability edge authenticates evidence or approves intent.
 
 Export creates `index.md`, `context.mmd`, `components.mmd`, `traceability.md` and
 `onboarding.md`. These are cited model projections, **not independently verified
 documentation**. Repeating discovery with `--existing "$WORK/discovered.json"`
 and a new output path preserves unchanged IDs/data; repeating export to a new
 directory produces identical bytes for the same model.
+The smoke runner also migrates this joined model to 1.1 and checks exact node,
+edge and trust-state preservation. Discovery's existing-model input remains 1.0;
+migration happens explicitly downstream. See [integration gate](verification/INTEGRATION_GATE.md).
 
 ## 4. Create and refine a requirement without approving it
 

@@ -1,6 +1,7 @@
 """Exercise the public CLI using only new local demo directories and fixed fixtures."""
 
 import argparse
+import html
 import json
 import subprocess
 import sys
@@ -77,12 +78,67 @@ def walkthrough(output):
         "Missing generated demo repositories",
     )
     model = output / "discovered.json"
-    cli("discover", examples / "discovery/manifest.json", model, "--base-dir", demo)
+    source_files = (".gitignore", "contract.py", "test_contract.py")
+    source_before = {
+        (component, name): (demo / component / name).read_bytes()
+        for component in COMPONENTS
+        for name in source_files
+    }
+    cli(
+        "discover",
+        examples / "discovery/manifest.json",
+        model,
+        "--base-dir",
+        demo,
+        "--existing",
+        examples / "integration/seed-model.json",
+    )
     require(
         cli("validate", model, "--json", capture="discovery-validation.json")["valid"],
         "Discovered model is invalid",
     )
     discovered = read_json(model)
+    intent = cli(
+        "inspect",
+        model,
+        "--node",
+        "requirement.demo-sync",
+        "--json",
+        capture="inspected-requirement.json",
+    )
+    observation = cli(
+        "inspect",
+        model,
+        "--node",
+        "implementation.demo-sync",
+        "--json",
+        capture="inspected-implementation.json",
+    )
+    require(
+        intent["approval"] == "pending"
+        and intent["provenance"]
+        == {
+            "origin": "declared",
+            "source": "examples/integration/README.md",
+            "verification": "unverified",
+        }
+        and observation["provenance"]["origin"] == "inferred"
+        and observation["provenance"]["verification"] == "unverified",
+        "Discovery/inspection must not promote inferred observations or approve intent",
+    )
+    require(
+        "ane-integration-probe-only" not in json.dumps(intent), "Inspect leaked synthetic secret"
+    )
+    migrated_joined = output / "discovered-1.1.json"
+    cli("migrate", model, migrated_joined)
+    cli("validate", migrated_joined, "--json", capture="joined-migration-validation.json")
+    upgraded = read_json(migrated_joined)
+    require(
+        upgraded["schema_version"] == "1.1"
+        and upgraded["nodes"] == discovered["nodes"]
+        and upgraded["edges"] == discovered["edges"],
+        "Migration must preserve identities, provenance and trust states exactly",
+    )
     require(
         {f"component.{name}" for name in COMPONENTS}
         <= {node["id"] for node in discovered["nodes"]},
@@ -107,6 +163,31 @@ def walkthrough(output):
             bool(text) and text == (output / "docs-repeat" / name).read_bytes(),
             f"Missing or nondeterministic projection: {name}",
         )
+        require(
+            "ane-integration-probe-only" not in html.unescape(text.decode("utf-8")),
+            "Documentation leaked synthetic secret",
+        )
+    trace = html.unescape((output / "docs" / "traceability.md").read_text(encoding="utf-8"))
+    require(
+        all(
+            identifier in trace
+            for identifier in (
+                "requirement.demo-sync",
+                "implementation.demo-sync",
+                "test.demo-sync",
+            )
+        ),
+        "Joined discovery model lost requirement/implementation/test traceability",
+    )
+    require(
+        source_before
+        == {
+            (component, name): (demo / component / name).read_bytes()
+            for component in COMPONENTS
+            for name in source_files
+        },
+        "Read-only discovery/docs altered generated repository sources",
+    )
 
     draft, questions = output / "draft.json", output / "questions.json"
     cli(
@@ -186,11 +267,11 @@ def walkthrough(output):
         "Context exceeded its byte proxy budget",
     )
     require(bool(pack["citations"]), "Context omitted citations")
+    require("ane-integration-probe-only" not in json.dumps(pack), "Context leaked synthetic secret")
 
     # Every tracked source file in all four generated fixture repositories is
     # explicitly enumerated. No scanning, Git metadata, secrets or outside paths.
     baseline = output / "whole-repository-baseline.txt"
-    source_files = (".gitignore", "contract.py", "test_contract.py")
     baseline.write_text(
         "\n".join(
             f"# {component}/{name}\n" + (demo / component / name).read_text(encoding="utf-8")
