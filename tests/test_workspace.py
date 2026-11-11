@@ -1,5 +1,6 @@
 """Tiny generated local repositories; no application builds or source execution."""
 
+import base64
 import hashlib
 import json
 import os
@@ -300,6 +301,53 @@ def test_refresh_write_failure_rolls_back(source, monkeypatch):
         workspace.refresh_workspace(target, base, apply=True)
     assert snapshot(target) == before
     assert workspace.workspace_status(target)["valid"]
+
+
+@pytest.mark.parametrize("error_type", [KeyboardInterrupt, RuntimeError])
+@pytest.mark.parametrize("during_rollback", [False, True])
+def test_interrupted_refresh_retains_original_recovery(
+    source, monkeypatch, error_type, during_rollback
+):
+    base, root, manifest = source
+    target = base / ".ane"
+    workspace.init_workspace(manifest, base, target)
+    before = snapshot(target)
+    advance(root)
+    source_before = snapshot(root)
+    original = workspace._replace
+    calls = 0
+    error = error_type("fixture interruption")
+
+    def interrupt(path, content):
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            if during_rollback:
+                raise OSError("fixture apply failure")
+            raise error
+        if calls == 3 and during_rollback:
+            raise error
+        return original(path, content)
+
+    monkeypatch.setattr(workspace, "_replace", interrupt)
+    with pytest.raises(error_type, match="fixture interruption") as raised:
+        workspace.refresh_workspace(target, base, apply=True)
+    assert raised.value is error
+    assert calls == (3 if during_rollback else 2)
+    recovery_bytes = (target / "recovery.json").read_bytes()
+    recovery = json.loads(recovery_bytes)
+    assert {
+        name: base64.b64decode(content) for name, content in recovery["files_base64"].items()
+    } == before
+    assert (target / "model.json").read_bytes() != before["model.json"]
+    assert snapshot(root) == source_before
+    assert not workspace.workspace_status(target)["valid"]
+    with pytest.raises(ValueError):
+        workspace.refresh_workspace(target, base, apply=True)
+    with pytest.raises(ValueError):
+        workspace.cleanup_workspace(target, apply=True)
+    assert (target / "recovery.json").read_bytes() == recovery_bytes
+    assert snapshot(root) == source_before
 
 
 def test_failed_rollback_retains_recovery_and_blocks_cleanup(source, monkeypatch):
