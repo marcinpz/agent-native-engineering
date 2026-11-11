@@ -69,6 +69,11 @@ JUnit import reads an existing report only; it never runs tests. Source commit b
 is user-attested, not authenticated; outcomes remain unverified. Import success is
 not test success. See the [bounded report contract](docs/PROVIDERS.md#existing-junit-report-import-partial-22).
 
+`lsm evaluate-junit` joins explicit imported case IDs to existing LSM tests and
+requirements without modifying the model or `.ane`. See the [traceability API,
+CLI and executable demo](docs/verification/EVIDENCE_TRACEABILITY.md). Mapped-test
+outcomes are not requirement verification; coverage remains unknown.
+
 `init` creates a valid empty model. `import` validates/converts JSON/YAML; it does
 not scan repositories. Writes refuse existing destinations unless `--force` is
 explicitly supplied. Conversion preserves data, not comments/layout; serialization
