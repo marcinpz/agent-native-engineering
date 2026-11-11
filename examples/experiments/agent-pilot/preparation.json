@@ -1,0 +1,87 @@
+{
+  "python": "3.12.9 (main, Mar 17 2025, 21:01:58) [Clang 20.1.0 ]",
+  "platform": "Linux-7.0.0-38-generic-x86_64-with-glibc2.43",
+  "trials": [
+    {
+      "directory": "/tmp/opencode/ane-pilot-runs/cancel-baseline",
+      "commit": "9b497906ebbe18ed2f00934bb285e733b08f5409",
+      "hashes": {
+        "domain.py": "f8fdd7e30356af0f7ab8dd131901052cf2b9fdde0cb771198b9d97f1c2edc541",
+        "store.py": "2f3b6834482d6978db00cf1b6df908d748082f8e58454a1f01b6239c21091016",
+        "api.py": "bc42ae45c19faf044d83dc38e205e1112f1985a76c5ed23b57f9585ad199babf",
+        "client.py": "3b152b4533b9d7da443a825b8b2254b823715e06b50b8722a957400fb56bdece",
+        "test_public.py": "d1e4f101a0b3fda3a78347ff0ca20781685b81fdf5a6d680f1f249b7a9ca88ba",
+        "README.md": "633c3f51752741a8cc7929b1e0d81bd0c23a87b6266759f6e9f31086b84509f2",
+        "TASK.md": "93c997c8c5cb2cdc1d8293dbd2fde460b37f60b26bab70ad3cbe41fe3987be49",
+        ".gitignore": "a51104264729e7b362ea8c739de0ada29ba6e4f6047580ec3a3fd330ad20fd47"
+      },
+      "public_exit": 0,
+      "heldout_exit": 1,
+      "context_seconds": null,
+      "context_bytes": 0
+    },
+    {
+      "directory": "/tmp/opencode/ane-pilot-runs/cancel-ane",
+      "commit": "0340261ada3c1a939c394cc05b7685d27037c5d0",
+      "hashes": {
+        "domain.py": "f8fdd7e30356af0f7ab8dd131901052cf2b9fdde0cb771198b9d97f1c2edc541",
+        "store.py": "2f3b6834482d6978db00cf1b6df908d748082f8e58454a1f01b6239c21091016",
+        "api.py": "bc42ae45c19faf044d83dc38e205e1112f1985a76c5ed23b57f9585ad199babf",
+        "client.py": "3b152b4533b9d7da443a825b8b2254b823715e06b50b8722a957400fb56bdece",
+        "test_public.py": "d1e4f101a0b3fda3a78347ff0ca20781685b81fdf5a6d680f1f249b7a9ca88ba",
+        "README.md": "633c3f51752741a8cc7929b1e0d81bd0c23a87b6266759f6e9f31086b84509f2",
+        "TASK.md": "93c997c8c5cb2cdc1d8293dbd2fde460b37f60b26bab70ad3cbe41fe3987be49",
+        ".gitignore": "a51104264729e7b362ea8c739de0ada29ba6e4f6047580ec3a3fd330ad20fd47",
+        "CONTEXT.json": "1b5ad452d816c572178737a19a4e6fa152c3f9a089e15e2f4aa62bae5ae1d1f1"
+      },
+      "public_exit": 0,
+      "heldout_exit": 1,
+      "context_seconds": 0.011127670000860235,
+      "context_bytes": 5790
+    },
+    {
+      "directory": "/tmp/opencode/ane-pilot-runs/pagination-baseline",
+      "commit": "8ade6307bcd8abf962166639987197410942af25",
+      "hashes": {
+        "domain.py": "b1c431f95716004eb955cc33a2f1d841a2b2399cf9157a3dab1f14bbc5dc2c38",
+        "store.py": "e810e4c68f15e22013edbab7f80ee67888968344fece4f6a89fd3fd58abfb040",
+        "api.py": "9eb427296e74cc49a86544c8d37645692d32a4143b916eefd3ff73d0cbd36b3f",
+        "client.py": "345e7d3779c7e3fbff051815d9983a5fc398934379edfff3f589e4498a7df446",
+        "test_public.py": "014797a83058ee4049693597032bc17df94ce9ead9dd5ea32dda9b27bfc2c64d",
+        "README.md": "f3d3d84466c4f871e8743e59c787d9da02afd051f677a17a4b3be414ddfadd28",
+        "TASK.md": "b48f02a4e6dd2cf387204dbf9f60e01e91cb6d26fc0177bb48c98338c41eed02",
+        ".gitignore": "a51104264729e7b362ea8c739de0ada29ba6e4f6047580ec3a3fd330ad20fd47"
+      },
+      "public_exit": 0,
+      "heldout_exit": 1,
+      "context_seconds": null,
+      "context_bytes": 0
+    },
+    {
+      "directory": "/tmp/opencode/ane-pilot-runs/pagination-ane",
+      "commit": "4ffeaeb5eed1ce0934227dd4d12261f4648f9cdd",
+      "hashes": {
+        "domain.py": "b1c431f95716004eb955cc33a2f1d841a2b2399cf9157a3dab1f14bbc5dc2c38",
+        "store.py": "e810e4c68f15e22013edbab7f80ee67888968344fece4f6a89fd3fd58abfb040",
+        "api.py": "9eb427296e74cc49a86544c8d37645692d32a4143b916eefd3ff73d0cbd36b3f",
+        "client.py": "345e7d3779c7e3fbff051815d9983a5fc398934379edfff3f589e4498a7df446",
+        "test_public.py": "014797a83058ee4049693597032bc17df94ce9ead9dd5ea32dda9b27bfc2c64d",
+        "README.md": "f3d3d84466c4f871e8743e59c787d9da02afd051f677a17a4b3be414ddfadd28",
+        "TASK.md": "b48f02a4e6dd2cf387204dbf9f60e01e91cb6d26fc0177bb48c98338c41eed02",
+        ".gitignore": "a51104264729e7b362ea8c739de0ada29ba6e4f6047580ec3a3fd330ad20fd47",
+        "CONTEXT.json": "3f1ebe9e14bf07343d5998d489028d81141b2a140e13e3157e1030b37bee40d6"
+      },
+      "public_exit": 0,
+      "heldout_exit": 1,
+      "context_seconds": 0.01320236100218608,
+      "context_bytes": 6205
+    }
+  ],
+  "heldout_sha256": {
+    "accept_pagination.py": "da48dc7e521b2626f8d9a178bc7f8e84ced17caf257b2816651db715429d233d",
+    "accept_cancel.py": "21b1f99e9955847c851b59df4c95bf5df9e43f5544e440c5f0e408a1bad0c7ca"
+  },
+  "model_cost_usd": 0,
+  "agent_results": null,
+  "setup_seconds_including_compile_and_checks": 6.11434839100184
+}

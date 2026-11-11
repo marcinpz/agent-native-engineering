@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="15" skipped="0" tests="15" time="0.300" timestamp="2026-11-11T19:38:42.043571+01:00" hostname="marcin-UX410UAK"><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_boundaries_and_insertions" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'page'">def test_boundaries_and_insertions():
+        store, api = setup()
+&gt;       assert api.page("u", 2) == (
+               ^^^^^^^^
+            200,
+            {"items": [{"id": "a", "text": "A"}, {"id": "c", "text": "C"}], "next_cursor": "c"},
+        )
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:17: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_limits[0]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'page'">limit = 0
+
+    @pytest.mark.parametrize("limit", [0, -1, 6, True, False, "2", 2.0, None])
+    def test_bad_limits(limit):
+        _, api = setup()
+&gt;       status, body = api.page("u", limit)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:36: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_limits[-1]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'page'">limit = -1
+
+    @pytest.mark.parametrize("limit", [0, -1, 6, True, False, "2", 2.0, None])
+    def test_bad_limits(limit):
+        _, api = setup()
+&gt;       status, body = api.page("u", limit)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:36: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_limits[6]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'page'">limit = 6
+
+    @pytest.mark.parametrize("limit", [0, -1, 6, True, False, "2", 2.0, None])
+    def test_bad_limits(limit):
+        _, api = setup()
+&gt;       status, body = api.page("u", limit)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:36: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_limits[True]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'page'">limit = True
+
+    @pytest.mark.parametrize("limit", [0, -1, 6, True, False, "2", 2.0, None])
+    def test_bad_limits(limit):
+        _, api = setup()
+&gt;       status, body = api.page("u", limit)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:36: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_limits[False]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'page'">limit = False
+
+    @pytest.mark.parametrize("limit", [0, -1, 6, True, False, "2", 2.0, None])
+    def test_bad_limits(limit):
+        _, api = setup()
+&gt;       status, body = api.page("u", limit)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:36: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_limits[2]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'page'">limit = '2'
+
+    @pytest.mark.parametrize("limit", [0, -1, 6, True, False, "2", 2.0, None])
+    def test_bad_limits(limit):
+        _, api = setup()
+&gt;       status, body = api.page("u", limit)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:36: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_limits[2.0]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'page'">limit = 2.0
+
+    @pytest.mark.parametrize("limit", [0, -1, 6, True, False, "2", 2.0, None])
+    def test_bad_limits(limit):
+        _, api = setup()
+&gt;       status, body = api.page("u", limit)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:36: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_limits[None]" time="0.003"><failure message="AttributeError: 'API' object has no attribute 'page'">limit = None
+
+    @pytest.mark.parametrize("limit", [0, -1, 6, True, False, "2", 2.0, None])
+    def test_bad_limits(limit):
+        _, api = setup()
+&gt;       status, body = api.page("u", limit)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:36: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_cursors[1]" time="0.004"><failure message="AttributeError: 'API' object has no attribute 'page'">cursor = 1
+
+    @pytest.mark.parametrize("cursor", [1, False, [], {}])
+    def test_bad_cursors(cursor):
+        _, api = setup()
+&gt;       status, body = api.page("u", 2, cursor)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:43: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_cursors[False]" time="0.005"><failure message="AttributeError: 'API' object has no attribute 'page'">cursor = False
+
+    @pytest.mark.parametrize("cursor", [1, False, [], {}])
+    def test_bad_cursors(cursor):
+        _, api = setup()
+&gt;       status, body = api.page("u", 2, cursor)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:43: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_cursors[cursor2]" time="0.003"><failure message="AttributeError: 'API' object has no attribute 'page'">cursor = []
+
+    @pytest.mark.parametrize("cursor", [1, False, [], {}])
+    def test_bad_cursors(cursor):
+        _, api = setup()
+&gt;       status, body = api.page("u", 2, cursor)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:43: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_bad_cursors[cursor3]" time="0.001"><failure message="AttributeError: 'API' object has no attribute 'page'">cursor = {}
+
+    @pytest.mark.parametrize("cursor", [1, False, [], {}])
+    def test_bad_cursors(cursor):
+        _, api = setup()
+&gt;       status, body = api.page("u", 2, cursor)
+                       ^^^^^^^^
+E       AttributeError: 'API' object has no attribute 'page'
+
+../../ane-pilot-evaluator/accept_pagination.py:43: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_client_follows_pages" time="0.001"><failure message="AttributeError: 'Client' object has no attribute 'iter_items'">def test_client_follows_pages():
+        _, api = setup()
+&gt;       assert list(Client(api, "u").iter_items(1)) == Client(api, "u").items()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Client' object has no attribute 'iter_items'
+
+../../ane-pilot-evaluator/accept_pagination.py:49: AttributeError</failure></testcase><testcase classname="ane-pilot-evaluator.accept_pagination" name="test_client_propagates_later_failure" time="0.002"><failure message="AttributeError: 'Client' object has no attribute 'iter_items'">def test_client_propagates_later_failure():
+        class Stub:
+            def page(self, owner, limit=2, cursor=None):
+                if cursor is None:
+                    return 200, {"items": [{"id": "a", "text": "A"}], "next_cursor": "a"}
+                return 503, {"error": "unavailable"}
+    
+&gt;       iterator = iter(Client(Stub(), "u").iter_items())
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Client' object has no attribute 'iter_items'
+
+../../ane-pilot-evaluator/accept_pagination.py:63: AttributeError</failure></testcase></testsuite></testsuites>
