@@ -1,0 +1,26 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.6.7"
+      - run: uv sync --locked --python 3.12
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run pytest
+      - run: uv run lsm validate examples/shop.json --json
+      - run: uv build
+      - name: Smoke test installed wheel outside checkout
+        working-directory: ${{ runner.temp }}
+        run: >-
+          uv run --isolated --no-project --python 3.12
+          --with "${{ github.workspace }}/dist/agent_native_engineering-0.1.0-py3-none-any.whl"
+          lsm validate "${{ github.workspace }}/examples/shop.json" --json
