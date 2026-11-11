@@ -61,6 +61,14 @@ def configure(commands):
     context.add_argument("--task", required=True)
     context.add_argument("--seed", action="append", required=True, dest="seed_ids")
     context.add_argument("--budget", type=int, default=8192)
+    comparison = commands.add_parser(
+        "context-compare", help="compare an explicitly curated source baseline"
+    )
+    comparison.add_argument("path", type=Path)
+    comparison.add_argument("--task", required=True)
+    comparison.add_argument("--seed", action="append", required=True, dest="seed_ids")
+    comparison.add_argument("--budget", type=int, default=8192)
+    comparison.add_argument("--baseline", required=True, type=Path)
     benchmark = commands.add_parser("benchmark", help="offline smoke or supplied-trial summary")
     experiments = benchmark.add_subparsers(dest="benchmark_command", required=True)
     smoke = experiments.add_parser("smoke")
@@ -114,6 +122,24 @@ def write_projection(files, destination, force=False):
 
 
 def dispatch(args):
+    if args.command == "context-compare":
+        import json
+
+        from lsm.comparison import compare_repository_context
+
+        try:
+            baseline_text = args.baseline.read_text(encoding="utf-8")
+        except UnicodeError as exc:
+            raise ModelIOError("Repository baseline must be UTF-8 text") from exc
+        result = compare_repository_context(
+            load_model(args.path),
+            args.task,
+            args.seed_ids,
+            baseline_text,
+            args.budget,
+        )
+        print(json.dumps(result, sort_keys=True, separators=(",", ":")))
+        return 0
     if args.command == "context":
         import sys
 

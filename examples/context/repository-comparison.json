@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "kind": "repository_context_size_comparison",
+  "baseline": {
+    "scope": "caller_supplied_repository_sources",
+    "utf8_bytes": 1903,
+    "completeness": "caller_attestation_not_verified"
+  },
+  "compiled_context": {"utf8_bytes": 7841, "budget_proxy_bytes": 8192},
+  "byte_difference": -5938,
+  "agent_outcome_measured": false,
+  "provider_tokens": null,
+  "cost_usd": null,
+  "limitations": [
+    "Baseline completeness and curation are the caller's responsibility.",
+    "Full-source baseline and bounded context are not an equal-budget quality experiment.",
+    "A cited context pack may be larger than a tiny repository; no improvement is assumed."
+  ]
+}

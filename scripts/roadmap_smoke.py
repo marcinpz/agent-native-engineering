@@ -187,6 +187,38 @@ def walkthrough(output):
     )
     require(bool(pack["citations"]), "Context omitted citations")
 
+    # Every tracked source file in all four generated fixture repositories is
+    # explicitly enumerated. No scanning, Git metadata, secrets or outside paths.
+    baseline = output / "whole-repository-baseline.txt"
+    source_files = (".gitignore", "contract.py", "test_contract.py")
+    baseline.write_text(
+        "\n".join(
+            f"# {component}/{name}\n" + (demo / component / name).read_text(encoding="utf-8")
+            for component in sorted(COMPONENTS)
+            for name in source_files
+        ),
+        encoding="utf-8",
+    )
+    comparison = cli(
+        "context-compare",
+        model,
+        "--task",
+        task,
+        "--seed",
+        "component.backend",
+        "--budget",
+        "8192",
+        "--baseline",
+        baseline,
+        capture="repository-comparison.json",
+    )
+    require(
+        comparison["baseline"]["utf8_bytes"] == len(baseline.read_bytes())
+        and comparison["compiled_context"]["utf8_bytes"] == pack["accounting"]["estimated_tokens"]
+        and comparison["agent_outcome_measured"] is False,
+        "Repository baseline comparison must measure actual bytes, not agent performance",
+    )
+
     execution = output / "execution.json"  # Outside demo: extra files there count as drift.
     cli(
         "workflow",

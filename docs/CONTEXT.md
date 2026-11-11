@@ -95,6 +95,26 @@ is a transparent naive comparison, not measured savings, billed usage, or a
 fair agent-quality benchmark. A small model's context pack can be larger than
 the original because citations and uncertainty/accounting are explicit.
 
+### Explicit whole-repository baseline
+
+`lsm context-compare MODEL --task TEXT --seed ID --baseline sources.txt` measures
+the compiled pack against an explicitly supplied, curated repository-source text.
+It reads only that named file; there is no tree scan or URI fetching. The report
+contains sizes, not source text. Redaction is applied before counting. The caller
+attests completeness; the CLI cannot infer that a supplied file includes an
+entire repository. `compare_repository_context` exposes the same pure library API.
+
+The end-to-end walkthrough enumerates **every tracked source file** in the four
+generated demo repositories (`.gitignore`, `contract.py`, `test_contract.py`) and
+retains `whole-repository-baseline.txt` plus `repository-comparison.json`. This is
+an actual whole-demo-repository size comparison, not a model-only baseline.
+The baseline is untruncated while the pack is bounded: do not claim equal-budget
+agent quality, token billing or improved performance. Tiny demo source contexts
+can be smaller than the context pack. Paid agent comparison remains issue #8.
+The committed `examples/context/repository-comparison.json` records one actual
+walkthrough: 1,903 source bytes versus 7,841 compiled-pack bytes (the tiny fixture
+has more context metadata than code). It is not an agent-quality result.
+
 ## CLI integration contract
 
 The coordinator-owned CLI integration uses this interface (not a new server):

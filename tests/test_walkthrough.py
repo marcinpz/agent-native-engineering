@@ -34,6 +34,7 @@ def test_complete_cli_walkthrough(tmp_path):
         "requirement",
         "change",
         "context",
+        "context-compare",
         "workflow",
         "benchmark",
     }
@@ -41,3 +42,8 @@ def test_complete_cli_walkthrough(tmp_path):
     assert len(record["repositories"]) == 4
     assert record["reconciliation"]["verified"] is True
     assert json.loads((output / "questions.json").read_text())["state"] == "questions"
+    comparison = json.loads((output / "repository-comparison.json").read_text())
+    assert comparison["baseline"]["utf8_bytes"] == len(
+        (output / "whole-repository-baseline.txt").read_bytes()
+    )
+    assert comparison["agent_outcome_measured"] is False
