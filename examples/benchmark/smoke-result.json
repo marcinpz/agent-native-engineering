@@ -1,0 +1,49 @@
+{
+  "agent_outcome_measured": false,
+  "arms": {
+    "baseline": {
+      "agent_latency_seconds": null,
+      "context_bytes": 8469,
+      "cost_usd": null,
+      "impact_recall": null,
+      "onboarding_accuracy": null,
+      "pass_at_1": null,
+      "preparation_seconds": 0.0029239579998829868,
+      "repair_iterations": null,
+      "token_proxy_bytes_div_4": 2118,
+      "tokens_input": null,
+      "tokens_output": null
+    },
+    "lsm": {
+      "agent_latency_seconds": null,
+      "context_bytes": 8045,
+      "cost_usd": null,
+      "impact_recall": null,
+      "onboarding_accuracy": null,
+      "pass_at_1": null,
+      "preparation_seconds": 0.027808275000097638,
+      "repair_iterations": null,
+      "token_proxy_bytes_div_4": 2012,
+      "tokens_input": null,
+      "tokens_output": null
+    }
+  },
+  "budget": 8192,
+  "kind": "deterministic_smoke",
+  "limitations": [
+    "One local preparation per arm; timing varies with machine and cache state.",
+    "Whole-model baseline is not truncated to the compiler budget.",
+    "Byte/4 proxy is not tokenizer usage; no agent outcome measured.",
+    "No scientific comparison, speedup or paid-agent result is claimed."
+  ],
+  "measurement_order": [
+    "baseline",
+    "lsm"
+  ],
+  "model_id": "model.shop",
+  "schema_version": "1.0",
+  "seed_ids": [
+    "component.backend"
+  ],
+  "task": "Inspect backend dependencies"
+}

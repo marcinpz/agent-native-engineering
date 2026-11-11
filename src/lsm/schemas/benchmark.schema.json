@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-native-engineering.org/schemas/benchmark-1.0.schema.json",
+  "title": "Supplied paired agent benchmark trials (not smoke measurements)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "data_origin", "trials"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "kind": {"const": "agent_trials"},
+    "data_origin": {"enum": ["supplied_experiment", "synthetic_fixture"]},
+    "trials": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/trial"}}
+  },
+  "$defs": {
+    "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "measurement": {"type": ["number", "null"], "minimum": 0},
+    "count": {"type": ["integer", "null"], "minimum": 0},
+    "fraction": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "trial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "run_id", "pair_id", "arm", "task", "model_revision", "budget", "seed", "attempt", "success", "verification_ref", "tokens_input", "tokens_output", "cost_usd", "latency_seconds", "repair_iterations"],
+      "properties": {
+        "kind": {"const": "agent_trial"},
+        "run_id": {"$ref": "#/$defs/text"},
+        "pair_id": {"$ref": "#/$defs/text"},
+        "arm": {"enum": ["baseline", "lsm"]},
+        "task": {"$ref": "#/$defs/text"},
+        "model_revision": {"$ref": "#/$defs/text"},
+        "budget": {"type": "integer", "minimum": 1},
+        "seed": {"type": "integer", "minimum": 0},
+        "attempt": {"type": "integer", "minimum": 1},
+        "success": {"type": "boolean"},
+        "verification_ref": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+        "tokens_input": {"$ref": "#/$defs/count"},
+        "tokens_output": {"$ref": "#/$defs/count"},
+        "cost_usd": {"$ref": "#/$defs/measurement"},
+        "latency_seconds": {"$ref": "#/$defs/measurement"},
+        "repair_iterations": {"$ref": "#/$defs/count"},
+        "impact_recall": {"$ref": "#/$defs/fraction"},
+        "onboarding_accuracy": {"$ref": "#/$defs/fraction"}
+      },
+      "allOf": [{"if": {"properties": {"success": {"const": true}}}, "then": {"properties": {"verification_ref": {"$ref": "#/$defs/text"}}}}]
+    }
+  }
+}
