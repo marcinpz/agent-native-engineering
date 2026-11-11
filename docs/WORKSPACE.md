@@ -86,6 +86,12 @@ init over an existing directory. Multi-file writes are **not crash-atomic**.
 
 ## Trust limits
 
+Existing test reports can be joined to `model.json` with the separate read-only
+[`evaluate-junit` companion](verification/EVIDENCE_TRACEABILITY.md). Keep its
+mapping and output outside `.ane`: they are not managed bundle artifacts, and
+placing them inside blocks workspace integrity checks. This does not persist
+test evidence, change requirement trust or extend workspace refresh.
+
 No source scan, source execution, build, tests, migration recipe, remote access,
 environment/URI resolution, service or agent execution is added. Manifest framework
 names are declarations; Git refs are observations. Docs/context remain cited,

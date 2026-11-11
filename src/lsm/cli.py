@@ -42,6 +42,13 @@ def _parser():
     junit.add_argument("path", type=Path)
     junit.add_argument("--repository", required=True, help="explicit repository model ID")
     junit.add_argument("--commit", required=True, help="user-attested full source commit hash")
+    evaluation = commands.add_parser("evaluate-junit", help="read-only explicit evidence mapping")
+    evaluation.add_argument("path", type=Path)
+    evaluation.add_argument("--model", required=True, type=Path)
+    evaluation.add_argument("--mapping", required=True, type=Path)
+    evaluation.add_argument("--repository", required=True)
+    evaluation.add_argument("--commit", required=True)
+    evaluation.add_argument("--expected-commit", required=True)
     return parser
 
 
@@ -78,6 +85,19 @@ def _write(model, path, force):
 def main(argv=None):
     args = _parser().parse_args(argv)
     try:
+        if args.command == "evaluate-junit":
+            from lsm.evidence import evaluate_junit
+
+            result = evaluate_junit(
+                args.path,
+                model=load_model(args.model),
+                mapping=load_model(args.mapping),
+                repository=args.repository,
+                commit=args.commit,
+                expected_commit=args.expected_commit,
+            )
+            print(json.dumps(result, sort_keys=True))
+            return 0 if result["status"] == "succeeded" else 1
         if args.command == "import-junit":
             from lsm.junit import import_junit
 

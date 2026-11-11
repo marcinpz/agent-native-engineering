@@ -124,7 +124,9 @@ Failure/error/skip text and attributes, stdout/stderr and properties are never
 projected. Names/classnames are bounded and use shared redaction, which is not a
 complete secret detector: review metadata before publication. Suite counts describe
 the report's claims, not independently verified execution. There is no requirement
-mapping, workspace integration, automatic claim promotion or general test executor.
+mapping, workspace integration, automatic claim promotion or general test executor
+inside the importer. The additive read-only [`evaluate-junit` companion](verification/EVIDENCE_TRACEABILITY.md)
+joins explicit case mappings without changing this contract or the workspace bundle.
 
 Suite outcomes prioritize error, failure, empty, all-skipped, then passed (counts
 still disclose mixed skips). Unsupported testcase `status` values other than `run`
