@@ -17,6 +17,14 @@ class ModelIOError(Exception):
 class _ModelLoader(yaml.SafeLoader):
     """Use JSON-like scalars, not YAML 1.1 dates, octal or yes/no booleans."""
 
+    def construct_object(self, node, deep=False):
+        try:
+            return super().construct_object(node, deep=deep)
+        except (KeyError, IndexError, ValueError, TypeError) as exc:
+            raise yaml.constructor.ConstructorError(
+                None, None, f"Invalid value for YAML tag {node.tag}: {exc}", node.start_mark
+            ) from exc
+
 
 _ModelLoader.yaml_implicit_resolvers = {
     key: [
@@ -48,6 +56,15 @@ _ModelLoader.add_implicit_resolver(
     re.compile(r"^[+-]?\.(?:inf|Inf|INF|nan|NaN|NAN)$"),
     list("+-."),
 )
+
+
+class _ModelDumper(yaml.SafeDumper):
+    """Quote strings using the same scalar semantics as the model loader."""
+
+
+_ModelDumper.yaml_implicit_resolvers = {
+    key: list(resolvers) for key, resolvers in _ModelLoader.yaml_implicit_resolvers.items()
+}
 
 
 def _yaml_mapping(loader, node, deep=False):
@@ -145,8 +162,12 @@ def save_model(model, path) -> None:
             text = json.dumps(model, indent=2, sort_keys=True, ensure_ascii=False, allow_nan=False)
             text += "\n"
         else:
-            text = yaml.safe_dump(
-                model, sort_keys=True, allow_unicode=True, default_flow_style=False
+            text = yaml.dump(
+                model,
+                Dumper=_ModelDumper,
+                sort_keys=True,
+                allow_unicode=True,
+                default_flow_style=False,
             )
         with tempfile.NamedTemporaryFile(
             mode="w",

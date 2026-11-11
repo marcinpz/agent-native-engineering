@@ -2,6 +2,8 @@ import json
 import subprocess
 import sys
 
+import pytest
+
 from lsm.cli import main
 
 
@@ -113,3 +115,26 @@ def test_usage_and_console_entry_point():
         [sys.executable, "-m", "lsm", "validate"], capture_output=True, text=True
     )
     assert result.returncode == 2
+
+
+@pytest.mark.parametrize("tagged", ["!!bool garbage", '!!float ""', '!!int ""'])
+def test_malformed_tagged_yaml_has_structured_io_error(tmp_path, tagged):
+    path = tmp_path / "bad.yaml"
+    path.write_text(f"a: {tagged}\n")
+    result = subprocess.run(
+        [sys.executable, "-m", "lsm", "validate", str(path), "--json"],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 2
+    assert json.loads(result.stdout)["errors"][0]["code"] == "io_error"
+    assert "Traceback" not in result.stderr
+
+
+def test_import_preserves_exponent_string_title(tmp_path, capsys):
+    source, destination = tmp_path / "model.json", tmp_path / "model.yaml"
+    assert main(["init", str(source), "--title", "1e3"]) == 0
+    assert main(["import", str(source), str(destination)]) == 0
+    capsys.readouterr()
+    assert main(["inspect", str(destination), "--json"]) == 0
+    assert json.loads(capsys.readouterr().out)["model"]["title"] == "1e3"

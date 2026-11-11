@@ -18,3 +18,9 @@ jobs:
       - run: uv run pytest
       - run: uv run lsm validate examples/shop.json --json
       - run: uv build
+      - name: Smoke test installed wheel outside checkout
+        working-directory: ${{ runner.temp }}
+        run: >-
+          uv run --isolated --no-project --python 3.12
+          --with "${{ github.workspace }}/dist/agent_native_engineering-0.1.0-py3-none-any.whl"
+          lsm validate "${{ github.workspace }}/examples/shop.json" --json

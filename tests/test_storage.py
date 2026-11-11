@@ -2,8 +2,10 @@ import copy
 import json
 
 import pytest
+import yaml
 
 from lsm.storage import ModelIOError, load_model, save_model
+from lsm.validation import validate_model
 
 
 def model():
@@ -35,6 +37,55 @@ def test_sorted_keys_independent_of_insertion_order(tmp_path, suffix):
     save_model({"z": {"y": 1, "a": 2}, "a": []}, first)
     save_model({"a": [], "z": {"a": 2, "y": 1}}, second)
     assert first.read_bytes() == second.read_bytes()
+
+
+@pytest.mark.parametrize("text", ["1e3", "1E3", "-1e-3", "1.2e3", "0e+3"])
+def test_yaml_exponent_looking_string_keys_and_values_round_trip(tmp_path, text):
+    path = tmp_path / "strings.yaml"
+    original = {text: text, "nested": {text: [text]}}
+    save_model(original, path)
+    assert load_model(path) == original
+
+
+def test_yaml_whole_valid_model_round_trip_with_exponent_looking_strings(tmp_path):
+    original = model()
+    original["model"]["title"] = "1e3"
+    original["nodes"] = [
+        {
+            "id": "component",
+            "type": "component",
+            "title": "-1e-3",
+            "version": 1,
+            "description": "1.2e3",
+            "provenance": {"origin": "declared", "source": "1E3", "verification": "unverified"},
+        }
+    ]
+    assert validate_model(original) == []
+    path = tmp_path / "model.yaml"
+    save_model(original, path)
+    loaded = load_model(path)
+    assert loaded == original
+    assert validate_model(loaded) == []
+
+
+def test_model_yaml_resolvers_do_not_change_global_pyyaml_behavior(tmp_path):
+    original = {"title": "1e3"}
+    expected_dump = yaml.safe_dump(original)
+    expected_load = yaml.safe_load("title: 1e3\nflag: yes\n")
+    path = tmp_path / "model.yaml"
+    save_model(original, path)
+    assert load_model(path) == original
+    assert yaml.safe_dump(original) == expected_dump
+    assert yaml.safe_load("title: 1e3\nflag: yes\n") == expected_load
+    assert expected_load == {"title": "1e3", "flag": True}
+
+
+@pytest.mark.parametrize("scalar", ["!!bool garbage", '!!float ""', '!!int ""'])
+def test_malformed_tagged_yaml_scalars_raise_actionable_model_io_error(tmp_path, scalar):
+    path = tmp_path / "invalid.yaml"
+    path.write_text(f"a: {scalar}\n", encoding="utf-8")
+    with pytest.raises(ModelIOError, match="Cannot load model.*Invalid value for YAML tag"):
+        load_model(path)
 
 
 @pytest.mark.parametrize(

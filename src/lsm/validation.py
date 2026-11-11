@@ -103,6 +103,16 @@ def validate_model(model) -> list[dict]:
                         report(
                             "invalid_evidence_type", ref_path, f"Node {reference!r} is not evidence"
                         )
+                    elif (
+                        collection == "nodes"
+                        and entity.get("type") == "evidence"
+                        and reference == entity.get("id")
+                    ):
+                        report(
+                            "self_supporting_evidence",
+                            ref_path,
+                            "Evidence nodes must reference other evidence, not themselves",
+                        )
 
     supersedes = {}
     for index, edge in enumerate(collections["edges"]):

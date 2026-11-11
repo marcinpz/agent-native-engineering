@@ -216,6 +216,43 @@ def test_evidence_itself_cannot_claim_verified_without_evidence():
     assert "evidence_required" in codes(value)
 
 
+@pytest.mark.parametrize("references", [["proof"], ["proof", "other"]])
+def test_verified_evidence_cannot_reference_itself(references):
+    value = model(
+        [
+            node("proof", "evidence", provenance=provenance("verified"), evidence=references),
+            node("other", "evidence"),
+        ]
+    )
+    assert validate_model(value) == [
+        {
+            "code": "self_supporting_evidence",
+            "path": "/nodes/0/evidence/0",
+            "message": "Evidence nodes must reference other evidence, not themselves",
+        }
+    ]
+
+
+def test_verified_evidence_can_reference_other_evidence():
+    value = model(
+        [
+            node("proof", "evidence", provenance=provenance("verified"), evidence=["other"]),
+            node("other", "evidence"),
+        ]
+    )
+    assert validate_model(value) == []
+
+
+def test_evidence_reference_cycles_are_not_generally_forbidden():
+    value = model(
+        [
+            node("proof", "evidence", provenance=provenance("verified"), evidence=["other"]),
+            node("other", "evidence", provenance=provenance("verified"), evidence=["proof"]),
+        ]
+    )
+    assert validate_model(value) == []
+
+
 @pytest.mark.parametrize("entity_kind", ["node", "edge"])
 def test_evidence_references_must_exist_and_be_evidence_nodes(entity_kind):
     value = model([node("a")], [edge("e", "depends_on", "a", "a")])

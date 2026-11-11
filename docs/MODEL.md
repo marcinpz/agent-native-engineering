@@ -36,7 +36,8 @@ Every node and edge has provenance with a nonempty `source`, an `origin`, and a
 - `unverified`: no claim of verification.
 - `verified`: at least one evidence-node ID must appear in the claim's `evidence` list.
 
-Evidence nodes themselves require supporting evidence to be marked verified.
+Evidence nodes themselves require other supporting evidence to be marked verified;
+an evidence node cannot cite itself as its own support.
 Validation checks structure and references, not authenticity or truth. Neither a
 `verified_by` edge nor an evidence node means a test passed. Approval
 (`pending`, `approved`, `rejected`) is separate from verification; commands do not
