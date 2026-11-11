@@ -17,10 +17,17 @@ jobs:
       - run: uv run ruff check .
       - run: uv run pytest
       - run: uv run lsm validate examples/shop.json --json
+      - name: Validate model fixtures
+        run: |
+          uv run lsm validate examples/governance/model-1.0.json --json
+          uv run lsm validate examples/governance/model-1.1.json --json
+          uv run lsm validate examples/changes/before.json --json
+          uv run lsm validate examples/changes/offline-sync.json --json
+          uv run lsm validate examples/context/model.json --json
+      - run: uv run python scripts/roadmap_smoke.py
       - run: uv build
       - name: Smoke test installed wheel outside checkout
         working-directory: ${{ runner.temp }}
-        run: >-
-          uv run --isolated --no-project --python 3.12
-          --with "${{ github.workspace }}/dist/agent_native_engineering-0.1.0-py3-none-any.whl"
-          lsm validate "${{ github.workspace }}/examples/shop.json" --json
+        run: |
+          uv run --isolated --no-project --refresh-package agent-native-engineering --python 3.12 --with "${{ github.workspace }}/dist/agent_native_engineering-0.1.0-py3-none-any.whl" lsm validate "${{ github.workspace }}/examples/shop.json" --json
+          uv run --isolated --no-project --refresh-package agent-native-engineering --python 3.12 --with "${{ github.workspace }}/dist/agent_native_engineering-0.1.0-py3-none-any.whl" python "${{ github.workspace }}/scripts/roadmap_smoke.py"
