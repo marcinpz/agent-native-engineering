@@ -5,6 +5,9 @@ import re
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
+from defusedxml import ElementTree as SafeET
+from defusedxml.common import DefusedXmlException
+
 from lsm.providers import _diagnostic, _digest, _now
 from lsm.security import redact
 
@@ -36,15 +39,15 @@ def import_junit(path, *, repository, commit):
             raw = stream.read(MAX_BYTES + 1)
         if len(raw) > MAX_BYTES:
             raise ValueError
-        # Only UTF-8 XML: reject declarations before parsing, including internal
-        # entities. No DTD, external resolver, XInclude or network operation exists.
+        # Only UTF-8 XML. Parser callbacks reject DTDs/entities/external refs;
+        # comments and CDATA are ordinary XML, not declaration heuristics.
         text = raw.decode("utf-8-sig")
-        if "<!" in text or "\x00" in text:
+        if "\x00" in text:
             raise ValueError
         declaration = re.match(r"\s*<\?xml\s+([^?]*)\?>", text)
         if declaration and re.search(r"encoding\s*=\s*['\"](?!utf-8['\"])", declaration[1], re.I):
             raise ValueError
-        root = ET.fromstring(text)
+        root = SafeET.fromstring(text, forbid_dtd=True, forbid_entities=True, forbid_external=True)
         if root.tag not in {"testsuite", "testsuites"}:
             raise ValueError
         artifact = hashlib.sha256(raw).hexdigest()
@@ -152,6 +155,6 @@ def import_junit(path, *, repository, commit):
             "suites": suites,
             "cases": cases,
         }
-    except (OSError, ValueError, ET.ParseError, RecursionError):
+    except (OSError, ValueError, ET.ParseError, DefusedXmlException, RecursionError):
         result["errors"] = [_diagnostic("invalid_report", "", "JUnit report or binding rejected")]
     return result

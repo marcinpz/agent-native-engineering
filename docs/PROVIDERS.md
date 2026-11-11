@@ -113,9 +113,13 @@ Only `observed_at` varies across identical imports.
 The bounded dialect accepts UTF-8 `testsuite`/`testsuites` nesting with named cases,
 at most 2 MiB, 20,000 XML elements and depth 32. Optional declared aggregate counts
 must match descendant cases; multiple outcome markers, empty reports and unsupported
-structural elements fail closed. DTDs/entities and all `<!` declarations (including
-comments/CDATA) are rejected before parsing; no external entities, network,
-XInclude or execution is supported. This intentionally rejects some JUnit dialects.
+structural elements fail closed. Standard XML comments and CDATA text are accepted;
+comments are discarded and CDATA failure/output text is not projected. Parsing uses
+`defusedxml` with `forbid_dtd`, `forbid_entities` and `forbid_external` explicitly
+enabled: DTDs (including external subsets) and entity declarations/references are
+rejected by parser callbacks, not a blanket `<!` text heuristic. Predefined XML
+escapes such as `&amp;` remain valid. No external resolver, network, XInclude or
+execution is supported. This intentionally rejects some JUnit dialects.
 Failure/error/skip text and attributes, stdout/stderr and properties are never
 projected. Names/classnames are bounded and use shared redaction, which is not a
 complete secret detector: review metadata before publication. Suite counts describe
@@ -130,11 +134,19 @@ The companion JSON shape is documented here, not accepted by discovery-specific
 workspace import is claimed by this slice.
 
 Local slice verification (2026-11-11): focused JUnit/provider/discovery tests
-**132 passed** (21 JUnit cases); full `uv run pytest` **760 passed**;
+**142 passed** (31 JUnit cases); full `uv run pytest` **770 passed**;
 `uv run ruff format --check .` and `uv run ruff check .` passed.
 The documented fixture import and `uv run python scripts/adoption_smoke.py`
 passed; adoption still reported unchanged source bytes/HEADs and no application
 builds/tests. These checks do not authenticate any imported report.
+
+Review follow-up acceptance: comments and failure/error/skip/output CDATA import
+without exposing their text; hostile DTD/internal/external/parameter entity cases
+fail closed. A new interoperability test invokes installed pytest with `--junitxml`
+in a generated temporary fixture directory (one pass, one fail, one skip), then
+imports the real report and checks outcomes, attested binding, digest, unverified
+trust, no raw failure text, unchanged fixture/report bytes and no importer subprocess.
+Only the test harness runs pytest; the importer still never runs a test/build.
 
 ## Local verification (2026-11-11)
 

