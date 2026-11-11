@@ -11,13 +11,23 @@ _SENSITIVE_KEY = re.compile(
     r"(?:password|passwd|secret|token|api[_-]?key|authorization|credential|private[_-]?key)",
     re.IGNORECASE,
 )
+_CREDENTIAL = re.compile(
+    r"(?P<prefix>(?<!\w)(?:"
+    r'"(?:password|passwd|secret|token|api[_-]?key|authorization|credential|private[_-]?key)"'
+    r"|'(?:password|passwd|secret|token|api[_-]?key|authorization|credential|private[_-]?key)'"
+    r"|(?:password|passwd|secret|token|api[_-]?key|authorization|credential|private[_-]?key))"
+    r"\s*[=:]\s*)"
+    r'(?:(?P<quoted>"(?:\\[\s\S]|[^"\\])*(?:"|$)'
+    r"|'(?:\\[\s\S]|''|[^'\\])*(?:'|$))"
+    r"|[^\s&;,]+)",
+    re.IGNORECASE,
+)
 _PATTERNS = [
     re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----"),
     re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9_]{8,}|github_pat_[A-Za-z0-9_]+|sk-[A-Za-z0-9_-]{8,})\b"),
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
     re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._~+/-]+=*"),
-    re.compile(r"(?i)(?:password|passwd|secret|token|api[_-]?key|credential)\s*[=:]\s*[^\s&;,]+"),
-    re.compile(r"(?i)https?://[^\s/@]+:[^\s/@]+@"),
+    re.compile(r"(?i)\b[a-z][a-z0-9+.-]*://[^\s/:@]*:[^\s/@]+@"),
 ]
 _ACTIONS = {"approve_requirements", "approve_changes", "verify"}
 
@@ -39,9 +49,19 @@ def redact(value):
 
 
 def _redact_string(value):
+    def credential(match):
+        if match["quoted"] is not None:
+            quote = match["quoted"][0]
+            return match["prefix"] + quote + "[REDACTED]" + quote
+        return "[REDACTED]"
+
+    # Preserve quoted data delimiters while consuming complete quoted values;
+    # callers still serialize the resulting strings with json.dumps, never splice.
+    # Recognize Bearer/URI credentials first, before assignment matching could
+    # remove their identifying prefix and leave a trailing credential behind.
     for pattern in _PATTERNS:
         value = pattern.sub("[REDACTED]", value)
-    return value
+    return _CREDENTIAL.sub(credential, value)
 
 
 def require_authorization(policy, actor, action, actor_kind="human"):

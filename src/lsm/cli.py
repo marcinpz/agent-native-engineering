@@ -6,12 +6,18 @@ import sys
 from pathlib import Path
 
 from lsm.operations_cli import configure, dispatch
+from lsm.security import redact
 from lsm.storage import ModelIOError, load_model, save_model
 from lsm.validation import validate_model
 
 
+class _RedactingParser(argparse.ArgumentParser):
+    def error(self, message):
+        super().error(redact(message))
+
+
 def _parser():
-    parser = argparse.ArgumentParser(prog="lsm", description=__doc__)
+    parser = _RedactingParser(prog="lsm", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     init = commands.add_parser("init", help="create an empty, valid model")
     init.add_argument("path", type=Path)
@@ -34,6 +40,16 @@ def _parser():
 
 
 def _emit_errors(errors, json_output=False):
+    # Schema messages can contain reprs of entire invalid, secret-bearing values.
+    # Retain diagnostic locations/codes without projecting those raw values.
+    errors = redact(
+        [
+            {**error, "message": "Model schema constraint failed"}
+            if error["code"] == "schema_error"
+            else error
+            for error in errors
+        ]
+    )
     if json_output:
         print(json.dumps({"valid": False, "errors": errors}, sort_keys=True))
     else:
@@ -49,7 +65,7 @@ def _write(model, path, force):
         _emit_errors(errors)
         return 1
     save_model(model, path)
-    print(f"Saved {path}")
+    print(redact(f"Saved {path}"))
     return 0
 
 
@@ -88,7 +104,7 @@ def main(argv=None):
                     args.json_output,
                 )
                 return 1
-            print(json.dumps(node, indent=2, sort_keys=True))
+            print(json.dumps(redact(node), indent=2, sort_keys=True))
         else:
             summary = {
                 "schema_version": model["schema_version"],
@@ -100,6 +116,7 @@ def main(argv=None):
                     for kind in sorted({node["type"] for node in model["nodes"]})
                 },
             }
+            summary = redact(summary)
             if args.json_output:
                 print(json.dumps(summary, indent=2, sort_keys=True))
             else:
@@ -111,18 +128,20 @@ def main(argv=None):
                 for kind, count in summary["node_types"].items():
                     print(f"  {kind}: {count}")
         return 0
-    except ModelIOError as exc:
-        from lsm.security import redact
-
-        message = redact(str(exc))
+    except (ModelIOError, OSError) as exc:
+        # Parser/loader diagnostics may quote arbitrary source lines, not merely
+        # recognizable credentials. Filesystem failures remain actionable.
+        message = (
+            "Cannot read or write model; check document syntax, encoding and content"
+            if exc.__cause__ is not None and not isinstance(exc.__cause__, OSError)
+            else redact(str(exc))
+        )
         if getattr(args, "json_output", False):
             _emit_errors([{"code": "io_error", "path": "", "message": message}], True)
         else:
             print(f"I/O error: {message}", file=sys.stderr)
         return 2
     except ValueError as exc:
-        from lsm.security import redact
-
         _emit_errors(
             [{"code": "operation_error", "path": "", "message": redact(str(exc))}],
             getattr(args, "json_output", False),

@@ -26,11 +26,17 @@ a model containing `approved`/`verified` only imports untrusted declarations, no
 newly certified facts. URI existence, external evidence and actual behavior are
 not authenticated by graph validation.
 
-Documentation/context/benchmark projections apply shared redaction to sensitive
-keys, common tokens, credentials, private keys and URL passwords before output.
+CLI inspection, summaries and diagnostics, as well as documentation/context/benchmark
+projections, apply shared redaction to sensitive keys, common tokens, credentials,
+private keys and URI passwords before output. Quoted JSON/YAML credential keys and
+quoted values (including spaces and escaped quotes) are recognized. Schema and
+parse diagnostics omit raw invalid values/source excerpts; codes and locations
+remain available where applicable.
 Never load `.env`, secrets or arbitrary source files for context. Redaction is
 best-effort defense in depth: arbitrary prose can contain unknown secrets, so
 operators must curate inputs and review artifacts before publishing. Structured
 error messages for projections must not echo secret-bearing artifact contents.
-Raw `inspect`, import and persistence are local model editing tools, not safe
-publication endpoints; do not expose them to untrusted callers.
+Inspection is a redacted display, not a lossless model export. Import and
+persistence preserve raw artifacts for local editing; redaction never silently
+changes stored model data. Protect those files and editing operations with local
+permissions; do not expose them to untrusted callers.
