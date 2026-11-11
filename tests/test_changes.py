@@ -109,3 +109,102 @@ def test_redacted_identity_collision_is_rejected_not_silently_merged():
         after["nodes"].append(modified)
     with pytest.raises(ValueError, match="identifiers must remain stable"):
         create_proposal(before, after)
+
+
+def evidence_model(edge=False):
+    model, _ = inputs()
+    component = copy.deepcopy(model["nodes"][1])
+    component.update(id="c", evidence=["e"], confidence=0.7)
+    component["provenance"]["verification"] = "verified"
+    evidence = {
+        "id": "e",
+        "type": "evidence",
+        "title": "Test evidence",
+        "version": 1,
+        "uri": "file:test",
+        "provenance": {"origin": "declared", "source": "fixture", "verification": "unverified"},
+    }
+    model["nodes"] = [component, evidence]
+    model["edges"] = []
+    if edge:
+        component.pop("evidence")
+        component["provenance"]["verification"] = "unverified"
+        other = copy.deepcopy(component)
+        other["id"] = "d"
+        model["nodes"].append(other)
+        model["edges"] = [
+            {
+                "id": "edge.cd",
+                "type": "depends_on",
+                "source": "c",
+                "target": "d",
+                "evidence": ["e"],
+                "provenance": copy.deepcopy(evidence["provenance"]),
+            }
+        ]
+    return model
+
+
+@pytest.mark.parametrize("edge", [False, True])
+def test_evidence_impact_paths_and_trust(edge):
+    model = evidence_model(edge)
+    original = copy.deepcopy(model)
+    impact = analyze_impact(model, ["e"])
+    impacted = {item["id"]: item for item in impact["impacted"]}
+    token = 'evidence:["edge","edge.cd","e"]' if edge else 'evidence:["node","c","e"]'
+    assert impacted["c"]["via"] == [token]
+    if edge:
+        assert impacted["d"]["via"] == [token]
+        assert analyze_impact(model, ["c"])["impacted"][1]["via"] == ["edge.cd"]
+    assert impacted["e"]["verification"] == "unverified"
+    assert impacted["c"]["verification"] == ("unverified" if edge else "verified")
+    assert impacted["c"]["confidence"] == 0.7
+    assert impacted["c"]["origin"] == "declared"
+    assert model == original
+    reverse = {item["id"]: item for item in analyze_impact(model, ["c"])["impacted"]}
+    assert reverse["e"]["via"] == [token]
+
+
+def test_shared_cyclic_evidence_is_deterministic():
+    model = evidence_model()
+    other = copy.deepcopy(model["nodes"][1])
+    other.update(id="f", evidence=["e"])
+    model["nodes"][1]["evidence"] = ["f"]
+    model["nodes"][0]["evidence"].append("f")
+    model["nodes"].append(other)
+    impact = analyze_impact(model, ["e", "e"])
+    assert len(impact["impacted"]) == 3
+    assert impact["impacted"][0]["via"] == ['evidence:["node","c","e"]']
+    model["nodes"].reverse()
+    for node in model["nodes"]:
+        node.get("evidence", []).reverse()
+    assert analyze_impact(model, ["e"]) == impact
+
+
+@pytest.mark.parametrize("edge", [False, True])
+@pytest.mark.parametrize("operation", ["modified", "removed", "added"])
+def test_proposal_evidence_changes_use_both_snapshots(edge, operation):
+    before = evidence_model(edge)
+    after = copy.deepcopy(before)
+    if operation == "modified":
+        after["nodes"][1]["uri"] = "file:changed"
+    else:
+        after["nodes"].pop(1)
+        if edge:
+            after["edges"][0].pop("evidence")
+        else:
+            after["nodes"][0].pop("evidence")
+            after["nodes"][0]["provenance"]["verification"] = "unverified"
+        if operation == "added":
+            before, after = after, before
+    proposal = create_proposal(before, after)
+    assert validate_proposal(proposal) == []
+    impacted = {item["id"]: item for item in proposal["impact"]["impacted"]}
+    assert {"c", "e"} <= impacted.keys()
+    if edge:
+        assert "d" in impacted
+    if operation == "modified":
+        assert impacted["c"]["via"]
+    assert proposal["state"] == "proposed"
+    assert proposal["approval"] is None
+    assert proposal["impact"]["unknown_impact"] is True

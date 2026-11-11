@@ -6,7 +6,18 @@ their order. Summaries are redacted; they are not executable patches. Model
 digests use canonical raw content and bind exact inputs without disclosing them.
 
 `analyze_impact(model, seed_ids)` conservatively traverses relations in both
-directions and supplies an edge-ID path for each affected entity. This may
+directions, including node and edge evidence references, and supplies a `via`
+path for each affected node. Real relation hops remain edge-ID strings. Evidence
+hops are strings `evidence:["node",owner_id,evidence_id]` or
+`evidence:["edge",owner_id,evidence_id]` (compact JSON after `evidence:`), not
+invented edge IDs. The reserved syntax cannot collide with valid model IDs.
+Node references connect the owner and evidence; edge references connect the
+evidence to either endpoint of the supporting edge, bidirectionally. Consumers
+must distinguish these tokens before resolving a path entry as an edge ID.
+This preserves the schema's string-array representation and relation-only path
+format. Sorted breadth-first traversal selects deterministic shortest paths;
+shared and cyclic evidence is visited once. Evidence traversal does not promote
+verification, origin or confidence. This may
 overestimate impact; missing model edges and unknown external behavior mean
 `unknown_impact` is always true. Reported confidence is a model declaration, not
 measured impact accuracy. Disconnected entities are not assumed affected.

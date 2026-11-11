@@ -68,7 +68,7 @@ def semantic_diff(before, after):
 
 
 def analyze_impact(model, seed_ids):
-    """Conservative undirected reachability; report paths, never claim completeness."""
+    """Traverse relations/evidence; via contains edge IDs or evidence: JSON tokens."""
     _require_model(model)
     nodes = {node["id"]: node for node in model["nodes"]}
     if not isinstance(seed_ids, list) or not all(isinstance(item, str) for item in seed_ids):
@@ -80,6 +80,16 @@ def analyze_impact(model, seed_ids):
     for edge in sorted(model["edges"], key=lambda item: item["id"]):
         adjacency[edge["source"]].append((edge["target"], edge["id"]))
         adjacency[edge["target"]].append((edge["source"], edge["id"]))
+    # Keep via string-compatible, but distinguish references from real edge IDs.
+    # An edge's supporting evidence can affect either endpoint, in either direction.
+    for kind, owners in (("node", model["nodes"]), ("edge", model["edges"])):
+        for owner in owners:
+            endpoints = [owner["id"]] if kind == "node" else [owner["source"], owner["target"]]
+            for evidence_id in owner.get("evidence", []):
+                step = "evidence:" + _canonical([kind, owner["id"], evidence_id])
+                for endpoint in endpoints:
+                    adjacency[evidence_id].append((endpoint, step))
+                    adjacency[endpoint].append((evidence_id, step))
     paths = {seed: [] for seed in seeds}
     queue = deque(seeds)
     while queue:
