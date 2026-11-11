@@ -1,0 +1,117 @@
+{
+  "proposal_version": "0.1",
+  "id": "research.semantic-ir",
+  "issue": 9,
+  "status": "proposed",
+  "hypothesis_status": "untested",
+  "artifact_kind": "experiment-proposal",
+  "executable": false,
+  "architecture_adopted": false,
+  "implementation_approval": "required",
+  "full_compiler_approval": "separate-approved-adr-required",
+  "required_runtime": null,
+  "required_vendor": null,
+  "results": null,
+  "operations": [
+    {
+      "id": "op.add-checked",
+      "inputs": ["i32", "i32"],
+      "output": "result<i32,overflow>",
+      "semantics": "Exact mathematical sum if within signed 32-bit range; otherwise overflow tag."
+    },
+    {
+      "id": "op.equal",
+      "inputs": ["i32", "i32"],
+      "output": "bool",
+      "semantics": "Exact signed integer equality."
+    },
+    {
+      "id": "op.choose",
+      "inputs": ["bool", "i32", "i32"],
+      "output": "i32",
+      "semantics": "Select first value if true, otherwise second; values are already supplied."
+    }
+  ],
+  "unsupported_semantics": [
+    {"id": "gap.domain", "cases": ["money and units", "calendars and Unicode", "domain invariants"]},
+    {"id": "gap.network", "cases": ["protocol effects", "retries and idempotency", "partial failures"]},
+    {"id": "gap.concurrency", "cases": ["scheduling", "cancellation", "memory models"]},
+    {"id": "gap.state", "cases": ["transactions", "durable storage", "offline conflict resolution"]},
+    {"id": "gap.errors", "cases": ["host exceptions", "stack traces", "cross-boundary error translation"]},
+    {"id": "gap.security", "cases": ["authorization", "secrets and capabilities", "injection and side channels"]}
+  ],
+  "candidate_backends": [
+    {
+      "id": "backend.existing-source",
+      "role": "baseline",
+      "targets": ["existing-project-source"],
+      "optional": true,
+      "mapping": {
+        "status": "proposed",
+        "operation_ids": ["op.add-checked", "op.equal", "op.choose"],
+        "approach": "Traceability annotations to hand-written equivalents; no generated code.",
+        "unsupported_case_ids": ["gap.domain", "gap.network", "gap.concurrency", "gap.state", "gap.errors", "gap.security"],
+        "risks": ["Linked source may drift from the operation contract.", "Language and framework dependencies remain."]
+      }
+    },
+    {
+      "id": "backend.interpreter",
+      "role": "candidate",
+      "targets": ["unspecified-reference-interpreter"],
+      "optional": true,
+      "mapping": {
+        "status": "proposed",
+        "operation_ids": ["op.add-checked", "op.equal", "op.choose"],
+        "approach": "Typed operations with explicit range checks and tagged outcomes.",
+        "unsupported_case_ids": ["gap.domain", "gap.network", "gap.concurrency", "gap.state", "gap.errors", "gap.security"],
+        "risks": ["Interpreter defects can invalidate the reference semantics.", "Custom operations can lock users into a dialect and host runtime."]
+      }
+    },
+    {
+      "id": "backend.source-emitters",
+      "role": "candidate",
+      "targets": ["python", "typescript"],
+      "optional": true,
+      "mapping": {
+        "status": "proposed",
+        "operation_ids": ["op.add-checked", "op.equal", "op.choose"],
+        "approach": "Assess each emitter separately; explicit i32 checks and tagged errors, not native numeric defaults.",
+        "unsupported_case_ids": ["gap.domain", "gap.network", "gap.concurrency", "gap.state", "gap.errors", "gap.security"],
+        "risks": ["Python integer ranges require explicit bounds.", "TypeScript numeric conversion and exception conventions need adaptation.", "Generated diffs and build integration can exceed maintenance savings."]
+      }
+    },
+    {
+      "id": "backend.wasm",
+      "role": "candidate",
+      "targets": ["optional-wasm-host"],
+      "optional": true,
+      "mapping": {
+        "status": "proposed",
+        "operation_ids": ["op.add-checked", "op.equal", "op.choose"],
+        "approach": "Pure subset only, with explicit overflow checks and a reviewed tagged-error ABI.",
+        "unsupported_case_ids": ["gap.domain", "gap.network", "gap.concurrency", "gap.state", "gap.errors", "gap.security"],
+        "risks": ["Unchecked arithmetic can wrap instead of reporting overflow.", "Host imports and ABI introduce portability and security boundaries."]
+      }
+    }
+  ],
+  "evaluation": {
+    "status": "planned-not-run",
+    "paired_tasks": 20,
+    "repetitions_per_target": 3,
+    "oracle_cases_per_operation_per_target": 1000,
+    "rejection_cases_per_gap_per_target": 1,
+    "thresholds": {
+      "oracle_agreement_min": 1.0,
+      "silent_unsupported_acceptance_max": 0,
+      "task_pass_at_1_min": 0.9,
+      "median_maintenance_reduction_min": 0.2,
+      "paired_interval_confidence": 0.95,
+      "maintenance_interval_must_exclude_zero": true,
+      "median_latency_ratio_max": 2.0,
+      "peak_memory_ratio_max": 2.0,
+      "semantic_workarounds_per_operation_per_target_max": 1
+    },
+    "missing_measurements": null,
+    "adoption_on_pass": false
+  }
+}
