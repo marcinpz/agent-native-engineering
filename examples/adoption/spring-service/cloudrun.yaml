@@ -1,0 +1,12 @@
+# Sanitized HTTP-service declaration. Not deployed or validated against Cloud Run.
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: ane-synthetic-spring
+spec:
+  template:
+    spec:
+      containers:
+        - image: example.invalid/ane/synthetic-spring:fixture
+          ports:
+            - containerPort: 8080

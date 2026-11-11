@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "model": {"id": "system.synthetic-spring", "title": "Declared Spring HTTP-service fixture"},
+  "repositories": [{
+    "id": "repo.synthetic-spring", "title": "Synthetic Spring repository", "path": "spring-service",
+    "components": [{"id": "component.synthetic-spring", "title": "Declared Spring HTTP API",
+      "interfaces": [{"id": "interface.spring-health", "title": "Proposed Spring health endpoint"}]}]
+  }]
+}

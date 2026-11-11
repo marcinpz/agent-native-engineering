@@ -1,0 +1,9 @@
+{
+  "schema_version": "1.0",
+  "model": {"id": "system.synthetic-python", "title": "Declared Python HTTP-service fixture"},
+  "repositories": [{
+    "id": "repo.synthetic-python", "title": "Synthetic Python repository", "path": "python-service",
+    "components": [{"id": "component.synthetic-python", "title": "Declared Python HTTP API",
+      "interfaces": [{"id": "interface.python-health", "title": "Proposed Python health endpoint"}]}]
+  }]
+}

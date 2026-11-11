@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "model": {"id": "system.synthetic-multi", "title": "Two independent declared HTTP-service fixtures"},
+  "repositories": [
+    {"id": "repo.synthetic-spring", "title": "Synthetic Spring repository", "path": "spring-service",
+      "components": [{"id": "component.synthetic-spring", "title": "Declared Spring HTTP API",
+        "interfaces": [{"id": "interface.spring-health", "title": "Proposed Spring health endpoint"}]}]},
+    {"id": "repo.synthetic-python", "title": "Synthetic Python repository", "path": "python-service",
+      "components": [{"id": "component.synthetic-python", "title": "Declared Python HTTP API",
+        "interfaces": [{"id": "interface.python-health", "title": "Proposed Python health endpoint"}]}]}
+  ]
+}

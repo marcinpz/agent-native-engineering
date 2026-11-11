@@ -1,0 +1,5 @@
+[project]
+name = "ane-synthetic-python-fixture"
+version = "0.0.1"
+requires-python = ">=3.12"
+description = "Read-only source fixture; not executed by ANE adoption"
