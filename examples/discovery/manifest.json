@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "model": {"id": "system.discovery-demo", "title": "Local multi-repository demo"},
+  "repositories": [
+    {
+      "id": "repo.backend", "title": "Backend", "path": "backend",
+      "components": [{"id": "component.backend", "title": "Backend API", "interfaces": [{"id": "interface.api", "title": "Shop API"}]}]
+    },
+    {
+      "id": "repo.web", "title": "Web", "path": "web",
+      "components": [{"id": "component.web", "title": "Web client", "type": "component"}]
+    },
+    {
+      "id": "repo.mobile", "title": "Mobile", "path": "mobile",
+      "components": [{"id": "component.mobile", "title": "Mobile client"}]
+    },
+    {
+      "id": "repo.store", "title": "Store", "path": "store",
+      "components": [{"id": "component.store", "title": "Data store"}]
+    }
+  ],
+  "dependencies": [
+    {"id": "dependency.web-api", "source": "component.web", "target": "interface.api"},
+    {"id": "dependency.mobile-api", "source": "component.mobile", "target": "interface.api"},
+    {"id": "dependency.backend-store", "source": "component.backend", "target": "component.store"}
+  ]
+}
