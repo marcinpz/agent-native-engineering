@@ -96,3 +96,16 @@ def test_no_changes_and_metadata_changes():
     after = copy.deepcopy(before)
     after["model"]["title"] = "Renamed"
     assert len(create_proposal(before, after)["impact"]["impacted"]) == len(before["nodes"])
+
+
+def test_redacted_identity_collision_is_rejected_not_silently_merged():
+    before, after = inputs()
+    for identifier in ("ghp_abcdefghijk", "ghp_lmnopqrstuv"):
+        node = copy.deepcopy(before["nodes"][1])
+        node["id"] = identifier
+        before["nodes"].append(node)
+        modified = copy.deepcopy(node)
+        modified["title"] = "Modified"
+        after["nodes"].append(modified)
+    with pytest.raises(ValueError, match="identifiers must remain stable"):
+        create_proposal(before, after)

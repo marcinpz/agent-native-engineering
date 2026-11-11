@@ -26,6 +26,9 @@ def model_digest(model):
 def _require_model(model):
     if validate_model(model):
         raise ValueError("Change analysis requires a valid model")
+    identifiers = [model["model"]["id"]] + [item["id"] for item in model["nodes"] + model["edges"]]
+    if any(redact(identifier) != identifier for identifier in identifiers):
+        raise ValueError("Change projection identifiers must remain stable after redaction")
 
 
 def semantic_diff(before, after):

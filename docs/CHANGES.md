@@ -10,6 +10,8 @@ directions and supplies an edge-ID path for each affected entity. This may
 overestimate impact; missing model edges and unknown external behavior mean
 `unknown_impact` is always true. Reported confidence is a model declaration, not
 measured impact accuracy. Disconnected entities are not assumed affected.
+Secret-looking IDs that would change under redaction are rejected rather than
+collapsing distinct entities into the same redacted identity.
 
 `create_proposal(before, after)` combines impact from both graphs, including
 deleted edges/entities, so removal cannot hide affected clients/tests. Metadata
