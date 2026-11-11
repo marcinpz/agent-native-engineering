@@ -74,7 +74,10 @@ Refresh stages each replacement in the metadata directory and writes state last.
 Before replacing anything, it exclusively creates `.ane/recovery.json`, a labeled
 base64 backup of the original fixed metadata files. Ordinary write errors trigger
 rollback; successful rollback removes the backup and raises an error honestly.
-Incomplete rollback retains the backup and reports its location. A crash may also
+Incomplete rollback retains the backup and reports its location. Interruptions and
+unexpected exceptions during apply or rollback propagate and retain the original
+backup for manual recovery; it is removed only after confirmed success or complete
+rollback. A crash may also
 leave recovery/staging files. These block status/refresh/cleanup until human review.
 For manual recovery, review the original base64 bytes in `recovery.json`, restore
 **only the documented fixed paths** (never execute or trust arbitrary paths from a

@@ -207,7 +207,8 @@ def _apply(directory, before, after):
         stream.write(recovery_bytes)
         stream.flush()
         os.fsync(stream.fileno())
-    preserve = False
+    # Fail closed: interruptions and unexpected exceptions need manual recovery.
+    preserve = True
     try:
         written = []
         try:
@@ -223,11 +224,13 @@ def _apply(directory, before, after):
                 except OSError:
                     failed.append(name)
             if failed:
-                preserve = True
                 raise OSError(
                     f"Non-atomic refresh failed; rollback incomplete; recovery: {recovery}"
                 ) from exc
+            preserve = False
             raise OSError("Non-atomic refresh failed; original metadata restored") from exc
+        else:
+            preserve = False
     finally:
         if not preserve and recovery.read_bytes() == recovery_bytes:
             recovery.unlink()
