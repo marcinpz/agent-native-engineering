@@ -5,6 +5,7 @@ from functools import lru_cache
 from importlib.resources import files
 
 from jsonschema import Draft202012Validator, FormatChecker
+from referencing import Registry, Resource
 
 _IMPLEMENTABLE = {"component", "interface", "repository", "implementation"}
 _RELATIONS = {
@@ -23,12 +24,13 @@ _RELATIONS = {
 }
 
 
-@lru_cache(maxsize=1)
-def _validator():
-    schema = json.loads(
-        files("lsm").joinpath("schemas/model.schema.json").read_text(encoding="utf-8")
-    )
-    return Draft202012Validator(schema, format_checker=FormatChecker())
+@lru_cache(maxsize=2)
+def _validator(version="1.0"):
+    resource = "model-1.1.schema.json" if version == "1.1" else "model.schema.json"
+    schema = json.loads(files("lsm").joinpath(f"schemas/{resource}").read_text(encoding="utf-8"))
+    original = json.loads(files("lsm").joinpath("schemas/model.schema.json").read_text())
+    registry = Registry().with_resource(original["$id"], Resource.from_contents(original))
+    return Draft202012Validator(schema, registry=registry, format_checker=FormatChecker())
 
 
 def _pointer(parts):
@@ -42,15 +44,16 @@ def validate_model(model) -> list[dict]:
     def report(code, path, message):
         errors.append({"code": code, "path": path, "message": message})
 
-    for error in _validator().iter_errors(model):
+    version = model.get("schema_version") if isinstance(model, dict) else None
+    for error in _validator("1.1" if version == "1.1" else "1.0").iter_errors(model):
         report("schema_error", _pointer(error.absolute_path), error.message)
     if not isinstance(model, dict):
         return sorted(errors, key=lambda error: (error["path"], error["code"], error["message"]))
-    if "schema_version" in model and model["schema_version"] != "1.0":
+    if "schema_version" in model and model["schema_version"] not in ("1.0", "1.1"):
         report(
             "unsupported_schema_version",
             "/schema_version",
-            "Only schema version '1.0' is supported",
+            "Supported schema versions: '1.0', '1.1'",
         )
 
     collections = {}
