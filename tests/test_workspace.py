@@ -367,3 +367,74 @@ def test_init_write_failure_never_touches_source(source, monkeypatch):
         workspace.init_workspace(manifest, base, target)
     assert not target.exists()
     assert (root / "app.py").read_bytes() == source_bytes
+
+
+def test_context_file_matches_self_inclusive_budget(source):
+    base, root, manifest = source
+    target = base / ".ane"
+    workspace.init_workspace(manifest, base, target)
+
+    def check_size():
+        content = (target / "context.json").read_bytes()
+        accounting = json.loads(content)["accounting"]
+        assert len(content) == accounting["estimated_tokens"] <= accounting["budget"]
+        assert not content.endswith(b"\n")
+
+    check_size()
+    advance(root)
+    workspace.refresh_workspace(target, base, apply=True)
+    check_size()
+
+
+@pytest.mark.parametrize("internal", [True, False])
+def test_git_metadata_placement_rejected_before_discovery(source, monkeypatch, internal):
+    base, root, manifest = source
+    parent = root / ".git" if internal else base / "orchestration" / ".git"
+    parent.mkdir(parents=True, exist_ok=True)
+    target = parent / ".ane"
+    monkeypatch.setattr(workspace, "_provider", lambda _: pytest.fail("must not discover"))
+    with pytest.raises(ValueError, match="Git metadata"):
+        workspace.init_workspace(manifest, base, target)
+    assert not target.exists()
+
+
+def test_reordered_mock_is_noop_preserving_bytes_and_timestamps(source):
+    from lsm.providers import MockProvider
+
+    base, root, manifest = source
+    manifest["repositories"][0]["components"].append({"id": "component:other", "title": "Other"})
+    target = root / ".ane"
+    workspace.init_workspace(manifest, base, target)
+    before = snapshot(target)
+    timestamps = {name: (target / name).stat().st_mtime_ns for name in workspace.MANAGED}
+    model = json.loads(before["model.json"])
+    assert len(model["nodes"]) > 1 and len(model["edges"]) > 1
+    model["nodes"].reverse()
+    model["edges"].reverse()
+    for apply in (False, True):
+        result = workspace.refresh_workspace(
+            target, base, provider=MockProvider(model), apply=apply
+        )
+        assert not result["changed"] and not result["applied"]
+        assert result["diff"] == {
+            "nodes": {"added": [], "removed": [], "modified": []},
+            "edges": {"added": [], "removed": [], "modified": []},
+            "metadata_changed": False,
+        }
+        assert snapshot(target) == before
+        assert {
+            name: (target / name).stat().st_mtime_ns for name in workspace.MANAGED
+        } == timestamps
+
+
+def test_moved_workspace_fails_local_binding(source):
+    base, _, manifest = source
+    target = base / ".ane"
+    workspace.init_workspace(manifest, base, target)
+    destination = base / "elsewhere"
+    destination.mkdir()
+    moved = destination / ".ane"
+    target.rename(moved)
+    assert not workspace.workspace_status(moved)["valid"]
+    with pytest.raises(ValueError, match="location binding"):
+        workspace.refresh_workspace(moved, base, apply=True)

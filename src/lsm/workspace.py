@@ -12,7 +12,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
-from lsm.changes import semantic_diff
+from lsm.changes import model_digest, semantic_diff
 from lsm.context import compile_context, serialize_context
 from lsm.documentation import render_docs
 from lsm.validation import validate_model
@@ -51,6 +51,8 @@ def _placement(directory, base, manifest):
     _schema("discovery", manifest)
     if directory.name != ".ane":
         raise ValueError("Workspace must be named .ane")
+    if ".git" in directory.parts:
+        raise ValueError("Workspace must not be inside Git metadata")
     mode = "external"
     for repo in manifest["repositories"]:
         root = base / repo["path"]
@@ -97,9 +99,7 @@ def _bundle(project, model, evidence):
         "project.json": _json(project),
         "model.json": _json(model),
         "evidence.json": _json(evidence),
-        "context.json": (
-            serialize_context(compile_context(model, **project["context"])) + "\n"
-        ).encode(),
+        "context.json": serialize_context(compile_context(model, **project["context"])).encode(),
     }
     documents = render_docs(model)
     if set(documents) != set(DOCUMENTS):
@@ -293,7 +293,7 @@ def refresh_workspace(directory, base_dir, *, provider=None, apply=False):
     evidence, discovered = _discover(_provider(provider), project["manifest"], base)
     updated = _versions(discovered, model)
     diff = semantic_diff(model, updated)
-    changed = updated != model
+    changed = model_digest(updated) != model_digest(model)
     if changed and apply:
         project = deepcopy(project)
         project["provider"] = evidence["provider"]
