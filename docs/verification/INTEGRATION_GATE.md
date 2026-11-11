@@ -45,6 +45,7 @@ remote demo PRs, source migrations or deployment were used.
 | `uv run ruff format --check .` | Passed, 69 files formatted |
 | `uv run ruff check .` | Passed |
 | `uv run pytest` | **573 passed**, 34.74 s local observation |
+| Fresh local clone of gate commit `57aae63`: locked setup + `uv run pytest` | **573 passed**, 35.13 s local observation |
 | CLI validate all 7 model fixtures | All valid: shop, context, integration seed, governance 1.0/1.1, changes before/after |
 | `uv run python scripts/roadmap_smoke.py --output-dir /tmp/opencode/ane-integration-gate-19-20261111` | **25 CLI steps passed**; artifacts retained locally |
 | `uv build` | Source distribution and wheel built |
@@ -70,6 +71,8 @@ No new product failures were found, so no separate bug was filed. The documented
 1.0-only discovery-input boundary remains visible and tested; this gate does not
 silently broaden supported inputs or alter trust semantics.
 
-CI evidence: pending the gate commit's branch run. Final acceptance and issue
-closure require a successful linked run; local results above are already executed,
-not a prediction of CI success. Timing is one local observation, not a benchmark.
+CI evidence: [gate commit `57aae63`, successful run 43053661730](https://github.com/marcinpz/agent-native-engineering/actions/runs/43053661730).
+That run executes fresh checkout/setup, full formatting/lint/tests, all seven
+model fixtures, the joined walkthrough, package build and installed-wheel flow.
+Final main-branch run and issue closure are recorded on issue #19, pinning the
+integrated commit. Timings above are local observations, not benchmarks.
