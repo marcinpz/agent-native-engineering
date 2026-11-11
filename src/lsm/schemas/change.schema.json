@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "id", "state", "before_digest", "after_digest", "diff", "impact", "assumptions", "risks", "approval"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]*$"},
+    "state": {"enum": ["proposed", "approved"]},
+    "before_digest": {"$ref": "#/$defs/digest"},
+    "after_digest": {"$ref": "#/$defs/digest"},
+    "diff": {"type": "object", "additionalProperties": false,
+      "required": ["nodes", "edges", "metadata_changed"],
+      "properties": {"nodes": {"$ref": "#/$defs/diff"}, "edges": {"$ref": "#/$defs/diff"}, "metadata_changed": {"type": "boolean"}}},
+    "impact": {"type": "object", "additionalProperties": false,
+      "required": ["seeds", "impacted", "repositories", "unknown_impact", "limitations"],
+      "properties": {
+        "seeds": {"$ref": "#/$defs/strings"}, "repositories": {"$ref": "#/$defs/strings"},
+        "unknown_impact": {"const": true}, "limitations": {"$ref": "#/$defs/strings"},
+        "impacted": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+          "required": ["id", "type", "via", "origin", "verification", "confidence"],
+          "properties": {"id": {"type": "string"}, "type": {"type": "string"}, "via": {"$ref": "#/$defs/strings"},
+            "origin": {"enum": ["declared", "inferred", "observed"]}, "verification": {"enum": ["unverified", "verified"]},
+            "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1}}}}
+      }},
+    "assumptions": {"$ref": "#/$defs/strings"}, "risks": {"$ref": "#/$defs/strings"},
+    "approval": {"oneOf": [{"type": "null"}, {"type": "object", "additionalProperties": false,
+      "required": ["actor", "actor_kind", "content_digest"],
+      "properties": {"actor": {"type": "string", "minLength": 1}, "actor_kind": {"const": "human"}, "content_digest": {"$ref": "#/$defs/digest"}}}]}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "strings": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "diff": {"type": "object", "additionalProperties": false, "required": ["added", "removed", "modified"],
+      "properties": {"added": {"type": "array", "items": {"type": "object"}}, "removed": {"type": "array", "items": {"type": "object"}},
+        "modified": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "before", "after", "fields"],
+          "properties": {"id": {"type": "string"}, "before": {"type": "object"}, "after": {"type": "object"}, "fields": {"$ref": "#/$defs/strings"}}}}}}
+  }
+}

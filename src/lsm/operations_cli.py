@@ -39,6 +39,23 @@ def configure(commands):
             operation.add_argument("--policy", type=Path)
             operation.add_argument("--actor")
             operation.add_argument("--actor-kind", choices=["human", "agent"], default="human")
+    changes = commands.add_parser("change", help="semantic diff, impact and proposal approval")
+    actions = changes.add_subparsers(dest="change_command", required=True)
+    propose = actions.add_parser("propose")
+    propose.add_argument("before", type=Path)
+    propose.add_argument("after", type=Path)
+    propose.add_argument("destination", type=Path)
+    propose.add_argument("--id", default="change:offline-sync")
+    propose.add_argument("--force", action="store_true")
+    approve = actions.add_parser("approve")
+    approve.add_argument("source", type=Path)
+    approve.add_argument("destination", type=Path)
+    approve.add_argument("--policy", required=True, type=Path)
+    approve.add_argument("--actor", required=True)
+    approve.add_argument("--actor-kind", choices=["human", "agent"], default="human")
+    approve.add_argument("--force", action="store_true")
+    check = actions.add_parser("validate")
+    check.add_argument("source", type=Path)
 
 
 def write_document(document, destination, force=False):
@@ -66,6 +83,23 @@ def write_projection(files, destination, force=False):
 
 
 def dispatch(args):
+    if args.command == "change":
+        from lsm.changes import approve_proposal, create_proposal, validate_proposal
+
+        if args.change_command == "propose":
+            record = create_proposal(load_model(args.before), load_model(args.after), args.id)
+        else:
+            record = load_model(args.source)
+            if args.change_command == "validate":
+                import json
+
+                errors = validate_proposal(record)
+                print(json.dumps({"valid": not errors, "errors": errors}, sort_keys=True))
+                return int(bool(errors))
+            record = approve_proposal(record, load_model(args.policy), args.actor, args.actor_kind)
+        write_document(record, args.destination, args.force)
+        print(f"Saved {args.destination}")
+        return 0
     if args.command == "requirement":
         from lsm.requirements import (
             create_requirement,

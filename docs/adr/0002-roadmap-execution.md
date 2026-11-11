@@ -19,8 +19,9 @@ Only human actors explicitly authorized by a supplied policy may authorize
 consequential state transitions; default is deny. Existing verified claims cannot
 be promoted or approval granted by inference or migration.
 
-Each child issue gets its own commit/branch/PR. Dependent PRs are stacked on the
-previous branch until human review/merge. Do not merge automatically.
+Initially each child issue got its own commit/branch/PR. The owner subsequently
+authorized merging existing PRs and continuing without further PRs. Keep small
+issue-scoped commits and run checks before integrating; never merge failing CI.
 
 ## Order and contracts
 

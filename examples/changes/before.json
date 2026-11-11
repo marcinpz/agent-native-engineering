@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0", "model": {"id": "system.offline-demo", "title": "Offline sync demo"},
+  "nodes": [
+    {"id":"requirement.offline-sync","type":"requirement","title":"Sync notes online","version":1,"acceptance_criteria":["Online edits are persisted."],"approval":"pending","provenance":{"origin":"declared","source":"examples/changes/before.json","verification":"unverified"}},
+    {"id":"component.backend","type":"component","title":"Backend API","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"component.web","type":"component","title":"Web client","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"component.mobile","type":"component","title":"Mobile client","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"component.store","type":"component","title":"Data store","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"test.offline-sync","type":"test","title":"Cross-client sync acceptance","version":1,"description":"Proposed test, not an execution record.","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"repo.backend","type":"repository","title":"Backend","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"repo.web","type":"repository","title":"Web","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"repo.mobile","type":"repository","title":"Mobile","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"repo.store","type":"repository","title":"Store","version":1,"provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}}
+  ],
+  "edges": [
+    {"id":"edge.satisfies","type":"satisfies","source":"component.backend","target":"requirement.offline-sync","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"edge.web-backend","type":"depends_on","source":"component.web","target":"component.backend","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"edge.mobile-backend","type":"depends_on","source":"component.mobile","target":"component.backend","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"edge.backend-store","type":"depends_on","source":"component.backend","target":"component.store","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"edge.test","type":"verified_by","source":"requirement.offline-sync","target":"test.offline-sync","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"edge.repo-backend","type":"belongs_to","source":"component.backend","target":"repo.backend","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"edge.repo-web","type":"belongs_to","source":"component.web","target":"repo.web","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"edge.repo-mobile","type":"belongs_to","source":"component.mobile","target":"repo.mobile","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}},
+    {"id":"edge.repo-store","type":"belongs_to","source":"component.store","target":"repo.store","provenance":{"origin":"declared","source":"demo manifest","verification":"unverified"}}
+  ]
+}
