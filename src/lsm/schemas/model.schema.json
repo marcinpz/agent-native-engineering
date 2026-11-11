@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:lsm:schema:model:1.0",
+  "title": "Living System Model 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "model", "nodes", "edges"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "title": {"$ref": "#/$defs/nonemptyString"}
+      }
+    },
+    "nodes": {"type": "array", "items": {"$ref": "#/$defs/node"}},
+    "edges": {"type": "array", "items": {"$ref": "#/$defs/edge"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_.:-]*$"},
+    "nonemptyString": {"type": "string", "minLength": 1},
+    "strings": {"type": "array", "items": {"$ref": "#/$defs/nonemptyString"}},
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origin", "source", "verification"],
+      "properties": {
+        "origin": {"enum": ["declared", "inferred", "observed"]},
+        "source": {"$ref": "#/$defs/nonemptyString"},
+        "verification": {"enum": ["unverified", "verified"]},
+        "rationale": {"$ref": "#/$defs/nonemptyString"}
+      }
+    },
+    "verifiedClaim": {
+      "if": {
+        "required": ["provenance"],
+        "properties": {
+          "provenance": {
+            "required": ["verification"],
+            "properties": {"verification": {"const": "verified"}}
+          }
+        }
+      },
+      "then": {"required": ["evidence"], "properties": {"evidence": {"minItems": 1}}}
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "title", "version", "provenance"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "type": {
+          "enum": ["requirement", "domain_concept", "behavior", "component", "interface", "repository", "decision", "implementation", "test", "evidence"]
+        },
+        "title": {"$ref": "#/$defs/nonemptyString"},
+        "version": {"type": "integer", "minimum": 1},
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "description": {"type": "string"},
+        "evidence": {"$ref": "#/$defs/evidence"},
+        "acceptance_criteria": {"$ref": "#/$defs/strings"},
+        "open_questions": {"$ref": "#/$defs/strings"},
+        "constraints": {"$ref": "#/$defs/strings"},
+        "owner": {"$ref": "#/$defs/nonemptyString"},
+        "approval": {"enum": ["pending", "approved", "rejected"]},
+        "uri": {"$ref": "#/$defs/nonemptyString"},
+        "commit": {"$ref": "#/$defs/nonemptyString"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "allOf": [
+        {"$ref": "#/$defs/verifiedClaim"},
+        {
+          "if": {"properties": {"type": {"const": "requirement"}}, "required": ["type"]},
+          "then": {
+            "required": ["acceptance_criteria", "approval"],
+            "properties": {"acceptance_criteria": {"minItems": 1}}
+          }
+        },
+        {
+          "if": {"properties": {"type": {"const": "evidence"}}, "required": ["type"]},
+          "then": {"required": ["uri"]}
+        }
+      ]
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "source", "target", "provenance"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "type": {"enum": ["satisfies", "depends_on", "implemented_by", "verified_by", "supersedes", "exposes", "decided_by", "belongs_to"]},
+        "source": {"$ref": "#/$defs/id"},
+        "target": {"$ref": "#/$defs/id"},
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "evidence": {"$ref": "#/$defs/evidence"}
+      },
+      "allOf": [{"$ref": "#/$defs/verifiedClaim"}]
+    }
+  }
+}

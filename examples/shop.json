@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.0",
+  "model": {"id": "model.shop", "title": "Illustrative multi-repository shop"},
+  "nodes": [
+    {
+      "id": "repo.backend", "type": "repository", "title": "Backend repository", "version": 1,
+      "description": "Logical boundary only; no external repository was inspected.",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "repo.web", "type": "repository", "title": "Web repository", "version": 1,
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "repo.mobile", "type": "repository", "title": "Mobile repository", "version": 1,
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "repo.store", "type": "repository", "title": "Store infrastructure repository", "version": 1,
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "component.backend", "type": "component", "title": "Shop backend API", "version": 1,
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "component.web", "type": "component", "title": "Shop web client", "version": 1,
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "component.mobile", "type": "component", "title": "Shop mobile client", "version": 1,
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "component.store", "type": "component", "title": "Shop note database", "version": 1,
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "requirement.notes-old", "type": "requirement", "title": "Web shopping notes draft", "version": 1,
+      "description": "Earlier intent retained for traceability, superseded by cross-client notes.",
+      "acceptance_criteria": ["A signed-in user can retrieve their saved shopping notes on the web."],
+      "approval": "pending",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "requirement.notes", "type": "requirement", "title": "Shopping notes across clients", "version": 1,
+      "description": "Illustrative user intent, awaiting human approval; not a claim of implemented behavior.",
+      "acceptance_criteria": [
+        "A signed-in user can save a shopping note through the backend API.",
+        "The same user can retrieve the note from web and mobile clients.",
+        "A different user cannot retrieve that note."
+      ],
+      "open_questions": ["Should mobile support offline edits and conflict resolution?"],
+      "constraints": ["Do not treat this sample as authorization to deploy or change requirements."],
+      "owner": "example-product-owner",
+      "approval": "pending",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "domain.note", "type": "domain_concept", "title": "User-owned shopping note", "version": 1,
+      "description": "A shopping note has a stable identity, an owner, and text. Ownership policy remains proposed.",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "behavior.notes", "type": "behavior", "title": "Save and retrieve a shopping note", "version": 1,
+      "description": "Proposed flow: client to API to store, with an ownership check on retrieval.",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "interface.notes", "type": "interface", "title": "Notes API contract", "version": 1,
+      "description": "Proposed POST /notes and GET /notes endpoints; no server has been executed.",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "decision.ownership", "type": "decision", "title": "Proposed server-side ownership boundary", "version": 1,
+      "description": "Candidate design for human review: enforce note ownership at the backend, not only in clients.",
+      "approval": "pending",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "implementation.notes", "type": "implementation", "title": "Hypothetical notes handler mapping", "version": 1,
+      "description": "Inferred mapping from the illustrative scenario, not an observation of actual source code. No repository was scanned.",
+      "confidence": 0.25,
+      "evidence": ["evidence.test-description"],
+      "provenance": {
+        "origin": "inferred", "source": "examples/evidence/sample-test-description.md", "verification": "unverified",
+        "rationale": "The proposed API/store interaction suggests a handler; its existence and behavior are unresolved."
+      }
+    },
+    {
+      "id": "test.notes", "type": "test", "title": "Proposed cross-client note acceptance test", "version": 1,
+      "description": "Test description only, not an implemented or executed test; no passing result is claimed.",
+      "evidence": ["evidence.test-description"],
+      "provenance": {"origin": "declared", "source": "examples/evidence/sample-test-description.md", "verification": "unverified"}
+    },
+    {
+      "id": "evidence.test-description", "type": "evidence", "title": "Illustrative acceptance scenario artifact", "version": 1,
+      "uri": "examples/evidence/sample-test-description.md",
+      "description": "Local illustrative artifact, not an execution record or proof of correctness.",
+      "provenance": {"origin": "declared", "source": "examples/evidence/sample-test-description.md", "verification": "unverified"}
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge.satisfies", "type": "satisfies", "source": "behavior.notes", "target": "requirement.notes",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.web-api", "type": "depends_on", "source": "component.web", "target": "interface.notes",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.mobile-api", "type": "depends_on", "source": "component.mobile", "target": "interface.notes",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.backend-store", "type": "depends_on", "source": "component.backend", "target": "component.store",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.implemented-by", "type": "implemented_by", "source": "behavior.notes", "target": "implementation.notes",
+      "provenance": {"origin": "inferred", "source": "examples/evidence/sample-test-description.md", "verification": "unverified"}
+    },
+    {
+      "id": "edge.verified-by", "type": "verified_by", "source": "requirement.notes", "target": "test.notes",
+      "provenance": {
+        "origin": "declared", "source": "examples/shop.json", "verification": "unverified",
+        "rationale": "Planned verification relationship only; the test has not been executed."
+      }
+    },
+    {
+      "id": "edge.supersedes", "type": "supersedes", "source": "requirement.notes", "target": "requirement.notes-old",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.exposes", "type": "exposes", "source": "component.backend", "target": "interface.notes",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.decided-by", "type": "decided_by", "source": "domain.note", "target": "decision.ownership",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.backend-repo", "type": "belongs_to", "source": "component.backend", "target": "repo.backend",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.web-repo", "type": "belongs_to", "source": "component.web", "target": "repo.web",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.mobile-repo", "type": "belongs_to", "source": "component.mobile", "target": "repo.mobile",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.store-repo", "type": "belongs_to", "source": "component.store", "target": "repo.store",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.interface-repo", "type": "belongs_to", "source": "interface.notes", "target": "repo.backend",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.implementation-repo", "type": "belongs_to", "source": "implementation.notes", "target": "repo.backend",
+      "provenance": {"origin": "inferred", "source": "examples/shop.json", "verification": "unverified"}
+    },
+    {
+      "id": "edge.test-repo", "type": "belongs_to", "source": "test.notes", "target": "repo.backend",
+      "provenance": {"origin": "declared", "source": "examples/shop.json", "verification": "unverified"}
+    }
+  ]
+}
